@@ -12,7 +12,7 @@ void main() {
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
         DefaultMaterialLocalizations.delegate,
         DefaultWidgetsLocalizations.delegate,
-],
+      ],
     ),
   );
 }
@@ -21,6 +21,7 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
@@ -61,13 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
             navigatorKey: thirdTabNavKey,
             builder: (BuildContext context) => Community(),
           );
-        } 
-        else  {
+        } else {
           return CupertinoTabView(
             navigatorKey: thirdTabNavKey,
             builder: (BuildContext context) => Library(),
           );
-        } 
+        }
       },
     );
   }
