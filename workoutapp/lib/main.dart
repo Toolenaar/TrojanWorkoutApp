@@ -1,3 +1,6 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:workoutapp/workouts.dart';
@@ -7,16 +10,26 @@ final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> thirdTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> fourthTabNavKey = GlobalKey<NavigatorState>();
-void main() {
-  runApp(
-    new CupertinoApp(
+FirebaseAnalytics analytics = FirebaseAnalytics();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(WorkoutApp());
+}
+
+class WorkoutApp extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoApp(
       home: new HomeScreen(),
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
         DefaultMaterialLocalizations.delegate,
         DefaultWidgetsLocalizations.delegate,
       ],
-    ),
-  );
+    );
+  }
 }
 
 class HomeScreen extends StatefulWidget {
