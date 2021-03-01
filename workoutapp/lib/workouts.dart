@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//todo rests
-//todo quit
-
 class Workouts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,11 +15,46 @@ class Workouts extends StatelessWidget {
 }
 
 class WorkoutsHomePage extends StatelessWidget {
+  final exercises = List<int>.generate(5, (i) => i); // today's exercises data
   @override
   Widget build(BuildContext context) {
-    return CupertinoButton(
-      child: const Text("today's workout"),
-      onPressed: () => Navigator.pushNamed(context,'exercise'),
+    return Column(
+      children: [
+        CupertinoButton(
+          child: const Text("today's workout"),
+          onPressed: () => Navigator.pushNamed(context,'exercise')
+        ),
+        ListView.builder( // list of exercises in workout
+          shrinkWrap: true,
+          itemCount: exercises.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ExerciseWidget(exercises[index]);
+          },
+        )
+      ]
+    );
+
+  }
+}
+
+class ExerciseWidget extends StatelessWidget {
+  final int exercise; // exercise data
+  const ExerciseWidget(this.exercise, {
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card( //todo inc img
+      child: Padding(
+        padding: EdgeInsets.only(top: 36.0, left: 6.0, right: 6.0, bottom: 6.0),
+        child: ExpansionTile(
+          title: Text('Exercise ' + exercise.toString()),
+          children: <Widget>[
+            Text('exercise details')
+          ],
+        ),
+      ),
     );
   }
 }
