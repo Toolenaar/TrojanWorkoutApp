@@ -19,7 +19,7 @@ void main() async {
   runApp(WorkoutApp());
 }
 
-class WorkoutApp extends StatelessWidget{
+class WorkoutApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
@@ -97,14 +97,14 @@ class _HomeScreenState extends State<HomeScreen> {
 //}
 //}
 
-class Community extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-    );
-  }
-}
+//class Community extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return Container(
+//      color: Colors.blue,
+//    );
+//  }
+//}
 
 class Library extends StatelessWidget {
   @override
