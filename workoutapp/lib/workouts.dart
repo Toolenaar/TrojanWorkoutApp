@@ -2,20 +2,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Workouts extends StatelessWidget {
+
+  final exercises = List<int>.generate(5, (i) => i); // today's exercises data
+  final finishQuestions = List<int>.generate(3, (i) => i); // finish questions data
+  final quitQuestions = List<int>.generate(2, (i) => i); // quit questions data
+
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
       routes: {
-        '/': (_) => WorkoutsHomePage(),
+        '/': (_) => WorkoutsHomePage(exercises),
         'exercise': (_) => ExercisePage(pageIndex:0),
-        'questions': (_) => QuestionsPage(),
+        'finishQuestions': (_) => QuestionsPage(finishQuestions),
+        'quitQuestions': (_) => QuestionsPage(quitQuestions)
       },
     );
   }
 }
 
 class WorkoutsHomePage extends StatelessWidget {
-  final exercises = List<int>.generate(5, (i) => i); // today's exercises data
+  final exercises;
+  const WorkoutsHomePage(this.exercises, {
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,7 +55,7 @@ class ExerciseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card( //todo inc img
+    return Card(
       child: Padding(
         padding: EdgeInsets.only(top: 36.0, left: 6.0, right: 6.0, bottom: 6.0),
         child: ExpansionTile(
@@ -61,43 +71,42 @@ class ExerciseWidget extends StatelessWidget {
 
 class ExercisePage extends StatelessWidget {
   final arr = List<int>.generate(5, (i) => i);
-  int pageIndex;
+  final int pageIndex;
+
   ExercisePage({Key key, @required this.pageIndex}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: CupertinoButton(
-            child: const Text('Back'),
-            onPressed: () {
-              pageIndex--;
-              Navigator.of(context).pop();
-            },
-          ),
+        CupertinoButton(
+          child: const Text('Back'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
-        Align(
-          alignment: Alignment.topRight,
-          child: CupertinoButton(
-            child: const Text('Forward'),
-            onPressed: () {
-              pageIndex++;
-              if (pageIndex < arr.length) { // go to next exercise
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => ExercisePage(pageIndex: pageIndex)));
-              } else { // go to questions
-                Navigator.pushNamed(context,'questions');
-              }
-            },
-          ),
+        CupertinoButton(
+          child: const Text('Forward'),
+          onPressed: () {
+            if (pageIndex+1 < arr.length) { // go to next exercise
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => ExercisePage(pageIndex: pageIndex+1)));
+            } else { // go to questions
+              Navigator.pushNamed(context, 'finishQuestions');
+            }
+          },
+        ),
+        CupertinoButton(
+          child: const Text('Quit'),
+          onPressed: () {
+            Navigator.pushNamed(context, 'quitQuestions');
+          },
         ),
         Align(
           alignment: Alignment.center,
           child: CupertinoButton(
             child: Text(arr[pageIndex].toString()),
-            onPressed: () {
-            },
+            onPressed: () {},
           ),
         )
       ],
@@ -105,48 +114,26 @@ class ExercisePage extends StatelessWidget {
   }
 }
 class QuestionsPage extends StatefulWidget {
+  final questions;
+  const QuestionsPage(this.questions, {
+    Key key,
+  }) : super(key: key);
+
   @override
-  _QuestionsPageState createState() => _QuestionsPageState();
+  _QuestionsPage createState() => _QuestionsPage();
 }
 
-class _QuestionsPageState extends State<QuestionsPage> {
-  String v;
+class _QuestionsPage extends State<QuestionsPage> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
         children: [
-          Card(
-              child: ListTile(
-                  title: Text("question 1")
-              )
-          ),
-          Card(
-              child: ListTile(
-                  title: Text("answer 1"),
-                  leading: Radio(
-                      groupValue: v,
-                      value: "a1",
-                      onChanged: (value) {
-                        setState(() {
-                          v = value;
-                        });
-                      }
-                  )
-              )
-          ),
-          Card(
-              child: ListTile(
-                  title: Text("answer 2"),
-                  leading: Radio(
-                      groupValue: v,
-                      value: "a2",
-                      onChanged: (value) {
-                        setState(() {
-                          v = value;
-                        });
-                      }
-                  )
-              )
+          ListView.builder( // list of exercises in workout
+            shrinkWrap: true,
+            itemCount: widget.questions.length,
+            itemBuilder: (BuildContext context, int index) {
+              return QuestionWidget(widget.questions[index]);
+            },
           ),
           CupertinoButton(
             child: const Text("submit"),
@@ -157,6 +144,60 @@ class _QuestionsPageState extends State<QuestionsPage> {
               Navigator.popUntil(context, ModalRoute.withName('/'));
             }
           )
+        ]
+    );
+  }
+}
+
+class QuestionWidget extends StatefulWidget {
+  final int question;
+  const QuestionWidget(this.question, {
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _QuestionWidget createState() => _QuestionWidget();
+}
+
+class _QuestionWidget extends State<QuestionWidget> {
+  var answer;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        children: [
+          Card(
+              child: ListTile(
+                  title: Text("question " + (widget.question+1).toString())
+              )
+          ),
+          Card(
+              child: ListTile(
+                  title: Text("answer 1"),
+                  leading: Radio(
+                      groupValue: answer,
+                      value: "a1",
+                      onChanged: (value) {
+                        setState(() {
+                          answer = value;
+                        });
+                      }
+                  )
+              )
+          ),
+          Card(
+              child: ListTile(
+                  title: Text("answer 2"),
+                  leading: Radio(
+                      groupValue: answer,
+                      value: "a2",
+                      onChanged: (value) {
+                        setState(() {
+                          answer = value;
+                        });
+                      }
+                  )
+              )
+          ),
         ]
     );
   }
