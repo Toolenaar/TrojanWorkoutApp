@@ -38,6 +38,8 @@ dependencies:
   firebase_analytics: ^6.3.0
   toast: ^0.1.5
   email_validator: ^1.0.5
+  apple_sign_in: ^0.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
