@@ -8,7 +8,7 @@ class Personal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
+    return MaterialApp(
       routes: {
         '/': (_) => PersonalHomePage(exercises),
       },
@@ -63,8 +63,12 @@ class _ExerciseWidget extends State<ExerciseWidget> {
         child: ExpansionTile(
             title: Text('Record ' + widget.exercise.toString()),
             children: <Widget>[
-              Text('Yes')
-              //todo editable text in widget
+              TextField(
+                onChanged: (text){
+                  Text(text);
+                  //todo: stop text from erasing when expansion tile closes
+                }
+              )
             ]),
       ),
     );
