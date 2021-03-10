@@ -2,21 +2,6 @@ import 'package:flutter/cupertino.dart';
 //import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-bool _isEditingText = false;
-TextEditingController _editingController;
-//String initialText = "Initial Text";
-
-/*@override
-void initState() {
-  initState();
-  _editingController = TextEditingController(text: initialText);
-}
-@override
-void dispose() {
-  _editingController.dispose();
-  dispose();
-}*/
-
 //Main class
 class Personal extends StatelessWidget {
   final exercises = List<int>.generate(5, (i) => i); // today's exercises data
@@ -77,9 +62,8 @@ class _ExerciseWidget extends State<ExerciseWidget> {
         padding: EdgeInsets.only(top: 36.0, left: 6.0, right: 6.0, bottom: 6.0),
         child: ExpansionTile(
             title: Text('Record ' + widget.exercise.toString()),
-
             children: <Widget>[
-              Text ('Yes')
+              Text('Yes')
               //todo editable text in widget
             ]),
       ),
@@ -87,33 +71,3 @@ class _ExerciseWidget extends State<ExerciseWidget> {
   }
 }
 
-/*Widget _editTitleTextField(){
-  if (_isEditingText)
-    return Center(
-      child: TextField(
-        onSubmitted: (newValue){
-          setState(() {
-            initialText = newValue;
-            _isEditingText =false;
-          });
-        },
-        autofocus: true,
-        controller: _editingController,
-      ),
-    );
-  return InkWell(
-    onTap: () {
-      setState(() {
-        _isEditingText = true;
-      });
-    },
-    child: Text(
-  initialText,
-  style: TextStyle(
-    color: Colors.black,
-    fontSize: 18.0,
-  ),
-    )
- );
-}
-*/
