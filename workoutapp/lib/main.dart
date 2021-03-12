@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:workoutapp/workouts.dart';
 import 'package:workoutapp/personal.dart';
 import 'package:workoutapp/community.dart';
+import 'package:workoutapp/library.dart';
 
 final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
@@ -107,11 +108,11 @@ class _HomeScreenState extends State<HomeScreen> {
 //  }
 //}
 
-class Library extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.yellowAccent,
-    );
-  }
-}
+//class Library extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return Container(
+//      color: Colors.yellowAccent,
+//    );
+//  }
+//}
