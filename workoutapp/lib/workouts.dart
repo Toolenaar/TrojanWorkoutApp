@@ -35,17 +35,24 @@ class WorkoutsHomePage extends StatelessWidget {
         children: [
           Row(
               children: [
-                CupertinoButton(
-                    child: const Text("Subscription"),
-                    onPressed: () => {} //do stuff
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: ElevatedButton(
+                      onPressed: () => {},
+                      child: const Text("Subscription")
+                  ),//do stuff
                 ),
-                CupertinoButton(
-                    child: const Text("Daily Challenge"),
-                    onPressed: () => {} //do stuff
+
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: ElevatedButton(
+                      onPressed: () => {},
+                      child: const Text("Daily Challenge")
+                ),
                 ),
               ]
           ),
-          CupertinoButton(
+          ElevatedButton(
               child: const Text("Today's workout"),
               onPressed: () => Navigator.pushNamed(context, 'exercise')
           ),
@@ -73,11 +80,15 @@ class ExerciseWidget extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(top: 36.0, left: 6.0, right: 6.0, bottom: 6.0),
         child: ExpansionTile(
-          title: Text('Exercise ' + exercise.toString()),
+          title: Text('Exercise ' + exercise.toString(),
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           children: <Widget>[
             Text('exercise details')
           ],
-        ),
+          backgroundColor: Colors.yellow,
+          initiallyExpanded: false,
+        )
       ),
     );
   }
