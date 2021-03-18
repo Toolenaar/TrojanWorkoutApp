@@ -1,37 +1,45 @@
 {
   "project_info": {
-    "project_number": "920041749156",
-    "project_id": "trojan-workout",
-    "storage_bucket": "trojan-workout.appspot.com"
+    "project_number": "890185763269",
+    "project_id": "trojan-tcd-dev",
+    "storage_bucket": "trojan-tcd-dev.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:920041749156:android:da5a3470dcf2e81324c431",
+        "mobilesdk_app_id": "1:890185763269:android:8c3cc65d68bfc75ca023ac",
         "android_client_info": {
           "package_name": "com.example.workoutapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "920041749156-pggc2hgkdaqph88ed1q7mksta394f9f6.apps.googleusercontent.com",
+          "client_id": "890185763269-ar9i1uj93qkvemg1itaqotg2f5950bv1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.workoutapp",
+            "certificate_hash": "d27dfea0e65beebde89f1f6dd0c175399ee02165"
+          }
+        },
+        {
+          "client_id": "890185763269-tk8c65sgs7b759b006h8j46eace4p60p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDSS4tzhcDaX9RO3OkyFeeCHk_MBI2IgLQ"
+          "current_key": "AIzaSyCLla3gN1bZfxR-O3mTzEhk5iq8AJXcLwI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "920041749156-pggc2hgkdaqph88ed1q7mksta394f9f6.apps.googleusercontent.com",
+              "client_id": "890185763269-tk8c65sgs7b759b006h8j46eace4p60p.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "920041749156-aefer6nio6gfmof07e79u1h6u3ml9r3j.apps.googleusercontent.com",
+              "client_id": "890185763269-kcf1ev0fk25frm4591q7qjqqqjd6b8s3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.workoutapp"
