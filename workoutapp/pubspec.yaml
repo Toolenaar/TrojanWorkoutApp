@@ -41,6 +41,8 @@ dependencies:
   email_validator: ^1.0.5
   apple_sign_in: ^0.1.0
   table_calendar: ^2.3.3
+  url_launcher: ^5.7.10
+  
 
 dev_dependencies:
   flutter_test:
