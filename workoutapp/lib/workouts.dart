@@ -43,8 +43,9 @@ class WorkoutsHomePage extends StatelessWidget {
                   ),//do stuff
                 ),
 
+
                 Align(
-                  alignment: Alignment.topCenter,
+                  alignment: Alignment(500, 2.5),
                   child: ElevatedButton(
                       onPressed: () => {},
                       child: const Text("Daily Challenge")
@@ -127,14 +128,14 @@ class _ExercisePageState extends State<ExercisePage> {
         //     Navigator.of(context).pop(true);
         //   },
         // ),
-        CupertinoButton(
+        ElevatedButton(
           child: const Text('Skip'),
           onPressed: () {
             timer.cancel();
             nextPage(context);
           }
         ),
-        CupertinoButton(
+        ElevatedButton(
           child: const Text('Quit'),
           onPressed: () {
             timer.cancel();
