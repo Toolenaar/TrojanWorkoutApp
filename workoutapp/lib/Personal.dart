@@ -15,6 +15,7 @@ class Personal extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/': (_) => PersonalHomePage(exercises),
+        'days': (_) => FullProgramPage()
       },
     );
   }
@@ -53,7 +54,8 @@ class _PersonalHomePage extends State<PersonalHomePage> {
     var size = MediaQuery.of(context)
         .size; //this gives us total height and width of our device
     return Scaffold(
-        body: Stack(children: <Widget>[
+        body: SingleChildScrollView(
+            child: Stack(children: <Widget>[
       Container(
         height: size.height * .35,
         color: Color(0xFFF5CEB8),
@@ -69,6 +71,9 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                       .headline2
                       .copyWith(fontWeight: FontWeight.w900),
                 ),
+                ElevatedButton(
+                    child: const Text("Full Program"),
+                    onPressed: () => Navigator.pushNamed(context, 'days')),
                 Text(
                   "Day 2: Today you will learn the importance of the power-pose",
                   style: Theme.of(context)
@@ -76,12 +81,31 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                       .headline6
                       .copyWith(fontWeight: FontWeight.w900),
                 ),
+
                 Text(content),
+                //need to space this out from previous text
               ])))
-    ]));
+    ])));
   }
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
+  }
+}
+
+//program page with each day
+class FullProgramPage extends StatefulWidget {
+  @override
+  _FullProgramPage createState() => _FullProgramPage();
+}
+
+class _FullProgramPage extends State<FullProgramPage> {
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context)
+        .size; //this gives us total height and width of our device
+    return Container(
+      height: size.height * .35,
+      color: Color(0xFFF5CEB8),
+    );
   }
 }
