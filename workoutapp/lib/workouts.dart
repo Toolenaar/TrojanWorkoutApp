@@ -1,9 +1,38 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Workouts extends StatelessWidget {
+Future<String> call() async {
+  try {
+    Response response = await Dio().get(
+        "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: "<ID>"
+          }
+        )
+    );
+    print(response);
+    return response.data.toString();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+class Workouts extends StatefulWidget {
+  @override
+  _WorkoutsState createState() => _WorkoutsState();
+}
+
+class _WorkoutsState extends State<Workouts> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   final exercises = List<int>.generate(5, (i) => i); // today's exercises data
   final finishQuestions = List<int>.generate(3, (i) => i); // finish questions data
@@ -42,20 +71,29 @@ class WorkoutsHomePage extends StatelessWidget {
                       child: const Text("Subscription")
                   ),//do stuff
                 ),
-
-
                 Align(
                   alignment: Alignment(500, 2.5),
                   child: ElevatedButton(
                       onPressed: () => {},
                       child: const Text("Daily Challenge")
-                ),
+                  ),
                 ),
               ]
           ),
           ElevatedButton(
               child: const Text("Today's workout"),
               onPressed: () => Navigator.pushNamed(context, 'exercise')
+          ),
+          FutureBuilder<String>( // todo example widget containing API data
+              future: call(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.data);
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return CircularProgressIndicator();
+              }
           ),
           ListView.builder( // list of exercises in workout
             shrinkWrap: true,
