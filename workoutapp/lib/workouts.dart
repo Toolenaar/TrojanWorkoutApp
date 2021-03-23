@@ -117,7 +117,10 @@ class ExerciseWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.only(top: 36.0, left: 6.0, right: 6.0, bottom: 6.0),
+        padding: EdgeInsets.only(top: 15.0, left: 6.0, right: 6.0, bottom: 6.0),
+        decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(13),
+        ),
         child: ExpansionTile(
           title: Text('Exercise ' + exercise.toString(),
             style: TextStyle(fontWeight: FontWeight.bold),
