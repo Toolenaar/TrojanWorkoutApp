@@ -60,15 +60,18 @@ class WorkoutsHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context)
+        .size;
     return Column(
         children: [
           Row(
               children: [
                 Align(
                   alignment: Alignment.topLeft,
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                       onPressed: () => {},
-                      child: const Text("Subscription")
+                      icon: Icon(Icons.add, size: 18),
+                      label: Text("Subscription"),
                   ),//do stuff
                 ),
                 Align(
@@ -78,7 +81,13 @@ class WorkoutsHomePage extends StatelessWidget {
                       child: const Text("Daily Challenge")
                   ),
                 ),
-              ]
+                Container(
+                  height: size.height * .05,
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                  ),
+                ),
+              ],
           ),
           ElevatedButton(
               child: const Text("Today's workout"),
@@ -116,7 +125,8 @@ class ExerciseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        margin: EdgeInsets.only(top: 15.0, left: 6.0, right: 6.0, bottom: 6.0),
+        margin: EdgeInsets.only(top: 25.0, left: 6.0, right: 6.0, bottom: 6.0),
+        shadowColor: Colors.blue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
@@ -125,15 +135,17 @@ class ExerciseWidget extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           children: <Widget>[
-            Text('exercise details')
+            Text('exercise details',
+            style: TextStyle(color: Colors.lightBlue),)
           ],
-          backgroundColor: Colors.yellow,
+          backgroundColor: Colors.lightGreen,
           initiallyExpanded: false,
         )
 
     );
   }
 }
+
 
 class ExercisePage extends StatefulWidget {
   final int pageIndex; // exercise data
