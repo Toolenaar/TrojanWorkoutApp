@@ -72,7 +72,7 @@ class WorkoutsHomePage extends StatelessWidget {
                   ),//do stuff
                 ),
                 Align(
-                  alignment: Alignment(500, 2.5),
+                  alignment: Alignment(1000000, 2.5),
                   child: ElevatedButton(
                       onPressed: () => {},
                       child: const Text("Daily Challenge")
@@ -116,8 +116,10 @@ class ExerciseWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: EdgeInsets.only(top: 15.0, left: 6.0, right: 6.0, bottom: 6.0),
+        margin: EdgeInsets.only(top: 15.0, left: 6.0, right: 6.0, bottom: 6.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
         child: ExpansionTile(
           title: Text('Exercise ' + exercise.toString(),
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -128,7 +130,7 @@ class ExerciseWidget extends StatelessWidget {
           backgroundColor: Colors.yellow,
           initiallyExpanded: false,
         )
-      ),
+
     );
   }
 }
