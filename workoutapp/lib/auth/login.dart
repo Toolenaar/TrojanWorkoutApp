@@ -322,7 +322,7 @@ class _LoginPageState extends State<LoginPage> {
             await signUpUser(_email, _password, _signUpKey);
           },
           child: new Text('Sign Up',
-              style: new TextStyle(fontSize: 20, color: Colors.white)),
+              style: new TextStyle(fontSize: 20, color: Colors.black)),
           shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(10)),
         ),
@@ -333,25 +333,26 @@ class _LoginPageState extends State<LoginPage> {
   Widget showSecondarySignUpButton() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: new FlatButton(
-        child: Row(
-          children: [
-            Text(
-              'Already Have an Account?',
-              style: new TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'Sign In',
-              style: new TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-            )
-          ],
-        ),
-        onPressed: () => _emailController.animateToPage(1,
-            duration: Duration(milliseconds: 500), curve: Curves.easeIn),
+      child: Column(
+        children: [
+          Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+          Text(
+            'Already Have an Account?',
+            style: new TextStyle(
+                fontSize: 20, fontWeight: FontWeight.w300, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: FlatButton(
+                child: Text('Sign In',
+                    style: new TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w300)),
+                onPressed: () => _emailController.animateToPage(1,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeIn)),
+          )
+        ],
       ),
     );
   }

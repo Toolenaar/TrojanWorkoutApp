@@ -35,11 +35,6 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage('assets/fonzIcons/backgroundMountain.png'),
-            alignment: Alignment.bottomCenter,
-          )),
           height: height,
           padding: EdgeInsets.fromLTRB(20, height * .4, 20, 0),
           child: Column(
@@ -96,25 +91,6 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
                           Container(
                             child: Row(children: [
                               Checkbox(
-                                value: agreedToEmail,
-                                onChanged: (value) {
-                                  setState(() {
-                                    agreedToEmail = !agreedToEmail;
-                                  });
-                                },
-                              ),
-                              Text(
-                                "i want to stay updated on "
-                                "\nFonz Music's growth via email",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ]),
-                          ),
-                          Container(
-                            child: Row(children: [
-                              Checkbox(
                                 value: agreedToPolicy,
                                 onChanged: (value) {
                                   setState(() {
@@ -145,9 +121,6 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
                                 // Validate returns true if the form is valid, or false
                                 // otherwise.
                                 if (_userNameKey.currentState.validate()) {
-                                  // tells firebase that the user gave a name
-                                  FirebaseAnalytics()
-                                      .logEvent(name: "UserGaveName");
                                   // If the form is valid, display a Snackbar.
 //                              Scaffold.of(context)
 //                                  .showSnackBar(
@@ -174,7 +147,7 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 20,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                               color: Colors.red[700],

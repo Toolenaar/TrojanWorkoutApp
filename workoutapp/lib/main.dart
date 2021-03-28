@@ -19,7 +19,7 @@ FirebaseAnalytics analytics = FirebaseAnalytics();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  
   runApp(WorkoutApp());
 }
 
@@ -27,7 +27,9 @@ class WorkoutApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      home: new RootPage(),
+      home: new RootPage(
+        auth: new Auth(),
+      ),
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
         DefaultMaterialLocalizations.delegate,
         DefaultWidgetsLocalizations.delegate,
