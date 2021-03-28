@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,6 @@ class Workouts extends StatelessWidget {
 
 class WorkoutsHomePage extends StatelessWidget {
   final exercises;
-
   const WorkoutsHomePage(this.exercises, {
     Key key,
   }) : super(key: key);
