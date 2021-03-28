@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:workoutapp/main.dart';
+
+PageController _homeController = PageController(
+  initialPage: 1,
+);
 
 class HomeNavigation extends StatefulWidget {
-  HomeNavigation({Key key}) : super(key: key);
+  HomeNavigation({this.userId, this.logoutCallback});
+
+  final String userId;
+  final VoidCallback logoutCallback;
 
   @override
   _HomeNavigationState createState() => _HomeNavigationState();
@@ -10,8 +18,16 @@ class HomeNavigation extends StatefulWidget {
 class _HomeNavigationState extends State<HomeNavigation> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-       child: child,
+    return new Scaffold(
+      body: PageView(
+        controller: _homeController,
+        physics: ClampingScrollPhysics(),
+        children: [
+          HomeScreen(
+            logoutCallback: widget.logoutCallback,
+          )
+        ],
+      ),
     );
   }
 }
