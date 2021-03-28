@@ -21,7 +21,7 @@ FirebaseAnalytics analytics = FirebaseAnalytics();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+
   runApp(WorkoutApp());
 }
 
@@ -55,7 +55,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
-    
     // TODO: implement initState
     super.initState();
   }
@@ -82,10 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Library'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text('Settings')
-          )
-
+              icon: Icon(Icons.settings), title: Text('Settings'))
         ],
       ),
       tabBuilder: (context, index) {
@@ -104,16 +100,17 @@ class _HomeScreenState extends State<HomeScreen> {
             navigatorKey: thirdTabNavKey,
             builder: (BuildContext context) => Community(),
           );
-        } else if (index ==3){
+        } else if (index == 3) {
           return CupertinoTabView(
             navigatorKey: thirdTabNavKey,
             builder: (BuildContext context) => Library(),
           );
-        }
-        else {
+        } else {
           return CupertinoTabView(
-          navigatorKey: thirdTabNavKey,
-          builder: (BuildContext context) => Settings(),
+            navigatorKey: thirdTabNavKey,
+            builder: (BuildContext context) {
+              return Settings(logoutCallback: widget.logoutCallback);
+            },
           );
         }
       },
