@@ -9,6 +9,7 @@ import 'package:workoutapp/workouts.dart';
 import 'package:workoutapp/personal.dart';
 import 'package:workoutapp/community.dart';
 import 'package:workoutapp/library.dart';
+import 'package:workoutapp/settings.dart';
 
 final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
@@ -78,6 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.account_circle),
             title: Text('Library'),
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            title: Text('Settings')
+          )
+
         ],
       ),
       tabBuilder: (context, index) {
@@ -96,10 +102,16 @@ class _HomeScreenState extends State<HomeScreen> {
             navigatorKey: thirdTabNavKey,
             builder: (BuildContext context) => Community(),
           );
-        } else {
+        } else if (index ==3){
           return CupertinoTabView(
             navigatorKey: thirdTabNavKey,
             builder: (BuildContext context) => Library(),
+          );
+        }
+        else {
+          return CupertinoTabView(
+          navigatorKey: thirdTabNavKey,
+          builder: (BuildContext context) => Settings(),
           );
         }
       },
