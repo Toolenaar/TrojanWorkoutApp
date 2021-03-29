@@ -70,7 +70,7 @@ class WorkoutsHomePage extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: ElevatedButton.icon(
                       onPressed: () => {},
-                      icon: Icon(Icons.add, size: 18),
+                      icon: Icon(Icons.add, size: 20),
                       label: Text("Subscription"),
                   ),//do stuff
                 ),
