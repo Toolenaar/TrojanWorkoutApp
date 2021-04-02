@@ -44,6 +44,19 @@ Future<List> getFinishQuestions() async {
   }
 }
 
+Future<void> postAnswers(List answers) async {
+  try {
+    var userId = "UserId1"; // todo get current user
+    await Dio().post(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/answers",
+      data: {"UserId":userId,"Answers":answers}
+    );
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
 class Workouts extends StatefulWidget {
   @override
   _WorkoutsState createState() => _WorkoutsState();
@@ -248,8 +261,9 @@ class _QuestionsPage extends State<QuestionsPage> {
           ),
           CupertinoButton(
             child: const Text("submit"),
-            onPressed: () {
+            onPressed: () async {
               if (!answers.contains("null")) { // only return home if all questions have been answered
+                await postAnswers(answers);
                 Navigator.popUntil(context, ModalRoute.withName('/')); // todo go to workout summary first?
               }
             }
