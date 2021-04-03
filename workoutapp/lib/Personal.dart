@@ -55,42 +55,73 @@ class _PersonalHomePage extends State<PersonalHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context)
-        .size; //this gives us total height and width of our device
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Stack(children: <Widget>[
-      Container(
-        height: size.height * .35,
-        color: Color(0xFFF5CEB8),
-      ),
-      SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(children: <Widget>[
-                Text(
-                  "Learn",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline2
-                      .copyWith(fontWeight: FontWeight.w900),
-                ),
-                ElevatedButton(
-                    child: const Text("Full Program"),
-                    onPressed: () => Navigator.pushNamed(context, 'days')),
-                Text(
-                  "Day 2: Today you will learn the importance of the power-pose",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(fontWeight: FontWeight.w900),
-                ),
-
-                Text(content),
-                //need to space this out from previous text
-              ])))
-    ])));
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+                child: const Text("Notes"),
+                onPressed: () => Navigator.pushNamed(context, 'days')),
+            ElevatedButton(onPressed: null, child: const Text("Full Program"))
+          ],
+        ),
+        titleSection,
+        Container(
+          padding: const EdgeInsets.all(32),
+          child: Text(content),
+        ),
+        //divider used to avoid overlapping with navigation bar
+        const Divider(
+          height: 80,
+          thickness: 5,
+          indent: 20,
+          endIndent: 20,
+        ),
+      ],
+    ))));
   }
+
+  Widget titleSection = Container(
+    padding: const EdgeInsets.all(32),
+    child: Row(
+      children: [
+        Expanded(
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Container(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Learn',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                'Learn Day1 title',
+                style: TextStyle(
+                  color: Colors.grey[500],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Icon(
+          Icons.wb_sunny_rounded,
+          color: Colors.red[500],
+        ),
+        Text('Day 2'),
+      ],
+    ),
+  );
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
@@ -158,7 +189,9 @@ class ExerciseWidget extends StatelessWidget {
   }
 }
 
-/* class VideoPlayer extends StatefulWidget {
+
+
+/*class VideoPlayer extends StatefulWidget {
   VideoPlayer({Key key}) : super(key: key);
 
   @override
