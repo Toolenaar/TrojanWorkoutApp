@@ -9,7 +9,7 @@ class Community extends StatelessWidget {
       routes: {
         '/': (_) => CommunityHomePage(),
         'principles': (_) => PrinciplesPage(),
-        'reviews': (_) => ReviewsPage()
+        'testimonials': (_) => TestimonialsPage()
       },
     );
   }
@@ -48,11 +48,11 @@ class CommunityHomePage extends StatelessWidget {
               onPressed: _launchURL,
             ), // goes to homepage on the external Trojan site
             CupertinoButton.filled(
-                child: Text("Reviews",
+                child: Text("Testimonials",
                     style: TextStyle(
                         fontSize: 14.0, color: CupertinoColors.white)),
                 onPressed: () => {
-                      Navigator.of(context).pushNamed("reviews")
+                      Navigator.of(context).pushNamed("testimonials")
                     }), // goes to new page with list of reviews
           ],
         ));
@@ -84,22 +84,79 @@ class PrinciplesPage extends StatelessWidget {
       navigationBar: CupertinoNavigationBar(
         middle: const Text("Mental Power Principles"),
       ),
-      child: CupertinoButton(
-        child: const Text(""),
-        onPressed: () {},
-      ),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CupertinoButton(
+                child: Text("1. Stay present in the moment",
+                    style: TextStyle(
+                        fontSize: 14.0, color: CupertinoColors.black)),
+                onPressed: () => {}),
+            CupertinoButton(
+              child: Text(
+                "2. Keep your focus on what you control",
+                style: TextStyle(fontSize: 14.0, color: CupertinoColors.black),
+              ),
+              onPressed: () => {},
+            ),
+            CupertinoButton(
+              child: Text("3. Avoid judgment",
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(fontSize: 14.0, color: CupertinoColors.black)),
+              onPressed: () => {},
+            ),
+          ]),
     );
   }
 }
 
-class ReviewsPage extends StatelessWidget {
+class TestimonialsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Reviews"),
+        middle: Text("Testimonials"),
       ),
-      child: Text(""),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CupertinoButton(
+                child: Text("Exercise 1 - Absolutely loved!",
+                    style: TextStyle(
+                        fontSize: 14.0, color: CupertinoColors.black)),
+                onPressed: () => {}),
+            CupertinoButton(
+              child: Text(
+                "Exercise 2 - Very enjoyable",
+                style: TextStyle(fontSize: 14.0, color: CupertinoColors.black),
+              ),
+              onPressed: () => {},
+            ),
+            CupertinoButton(
+              child: Text("Exercise 3 - Great workouts",
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(fontSize: 14.0, color: CupertinoColors.black)),
+              onPressed: () => {},
+            ),
+            CupertinoButton(
+              child: Text("Exercise 4 - Would recommend!",
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(fontSize: 14.0, color: CupertinoColors.black)),
+              onPressed: () => {},
+            ),
+            CupertinoButton(
+              child: Text("Exercise 5 - I love this app",
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(fontSize: 14.0, color: CupertinoColors.black)),
+              onPressed: () => {},
+            ),
+          ]),
     );
   }
 }
