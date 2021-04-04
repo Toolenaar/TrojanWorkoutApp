@@ -1,16 +1,27 @@
 import 'dart:async';
 //import 'dart:html';
-import 'dart:io';
-import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqlite_api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+//import 'package:sqflite/sqflite.dart';
+//import 'package:path_provider/path_provider.dart';
+//import 'package:sqflite/sqlite_api.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' show utf8;
 
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'dart:async';
+//import 'dart:html';
+//import 'dart:html';
+import 'dart:io';
+
+import 'package:flutter/services.dart' show rootBundle;
+
+import 'dart:convert';
+import 'dart:io' as io;
+
 //import 'package:video_player/video_player.dart';
 
 final exercises = List<int>.generate(6, (i) => i);
@@ -134,12 +145,6 @@ class _PersonalHomePage extends State<PersonalHomePage> {
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
   }
-}
-
-//program page with each day
-class FullProgramPage extends StatefulWidget {
-  @override
-  _FullProgramPage createState() => _FullProgramPage();
 }
 
 //program page with each day
