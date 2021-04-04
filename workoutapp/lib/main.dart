@@ -7,6 +7,7 @@ import 'package:workoutapp/workouts.dart';
 import 'package:workoutapp/personal.dart';
 import 'package:workoutapp/community.dart';
 import 'package:workoutapp/library.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
@@ -43,22 +44,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
+    
       tabBar: CupertinoTabBar(
+        activeColor: Color(0xFFF5CEB8),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: FaIcon(FontAwesomeIcons.dumbbell),
             title: Text('Workout'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text('Personal'),
+            icon: FaIcon(FontAwesomeIcons.leanpub),
+            title: Text('Learn'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: FaIcon(FontAwesomeIcons.globe),
             title: Text('Community'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
+            icon: Icon(FontAwesomeIcons.book),
             title: Text('Library'),
           ),
         ],
