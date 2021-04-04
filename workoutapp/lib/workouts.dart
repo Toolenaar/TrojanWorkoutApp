@@ -253,12 +253,12 @@ class _QuestionWidget extends State<QuestionWidget> {
         children: [
           Card(
               child: ListTile(
-                  title: Text("question " + (widget.question+1).toString())
+                  title: Text("Question " + (widget.question+1).toString())
               )
           ),
           Card(
               child: ListTile(
-                  title: Text("answer 1"),
+                  title: Text("Answer 1"),
                   leading: Radio(
                       groupValue: answer,
                       value: "a1",
@@ -272,7 +272,7 @@ class _QuestionWidget extends State<QuestionWidget> {
           ),
           Card(
               child: ListTile(
-                  title: Text("answer 2"),
+                  title: Text("Answer 2"),
                   leading: Radio(
                       groupValue: answer,
                       value: "a2",
