@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         } else {
           return CupertinoTabView(
-            navigatorKey: thirdTabNavKey,
+            navigatorKey: fourthTabNavKey,
             builder: (BuildContext context) => Library(),
           );
         }

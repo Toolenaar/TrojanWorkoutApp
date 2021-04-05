@@ -104,7 +104,7 @@ class WorkoutsHomePage extends StatelessWidget {
                       onPressed: () => {},
                       icon: Icon(Icons.add, size: 20),
                       label: Text("Subscription"),
-                  ),//do stuff
+                  ),
                 ),
                 Align(
                   alignment: Alignment(1000000, 2.5),
@@ -205,13 +205,6 @@ class _ExercisePageState extends State<ExercisePage> {
     var timer = new Timer(Duration(seconds: 2), () {nextPage(context);});
     return Row(
       children: [
-        // CupertinoButton(
-        //   child: const Text('Back'),
-        //   onPressed: () {
-        //     widget.timer.cancel();
-        //     Navigator.of(context).pop(true);
-        //   },
-        // ),
         ElevatedButton(
           child: const Text('Skip'),
           onPressed: () {
@@ -243,32 +236,43 @@ class QuestionsPage extends StatefulWidget {
 
 class _QuestionsPage extends State<QuestionsPage> {
   List answers = List<String>.generate((2), (index) => "null");
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children: [
-          FutureBuilder(
-              future: widget.getQuestions(),
-              builder: (context, snapshot) {
-                return ListView.builder( // list of exercises in workout
-                  shrinkWrap: true,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return QuestionWidget(snapshot.data[index],(answer)=>answers[index]=answer);
-                  },
-                );
-              }
-          ),
-          CupertinoButton(
-            child: const Text("submit"),
-            onPressed: () async {
-              if (!answers.contains("null")) { // only return home if all questions have been answered
-                await postAnswers(answers);
-                Navigator.popUntil(context, ModalRoute.withName('/')); // todo go to workout summary first?
-              }
-            }
-          )
-        ]
+    return FutureBuilder(
+        future: widget.getQuestions(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column( // success
+                children: [
+                  ListView.builder( // list of exercises in workout
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return QuestionWidget(snapshot.data[index], (answer) =>
+                      answers[index] = answer);
+                    },
+                    itemCount: snapshot.data.length,
+                  ),
+
+                  CupertinoButton(
+                      child: const Text("submit"),
+                      onPressed: () async {
+                        if (!answers.contains(
+                            "null")) { // only return home if all questions have been answered
+                          await postAnswers(answers);
+                          Navigator.popUntil(context, ModalRoute.withName(
+                              '/')); // todo go to workout summary first?
+                        }
+                      }
+                  )
+                ]
+            );
+          }
+          else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Text("Loading...");
+        }
     );
   }
 }
