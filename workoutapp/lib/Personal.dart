@@ -1,14 +1,33 @@
 import 'dart:async';
 //import 'dart:html';
-import 'dart:io';
+
+//import 'package:sqflite/sqflite.dart';
+//import 'package:path_provider/path_provider.dart';
+//import 'package:sqflite/sqlite_api.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' show utf8;
+
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'dart:async';
+//import 'dart:html';
+//import 'dart:html';
+import 'dart:io';
+
+import 'package:flutter/services.dart' show rootBundle;
+
+import 'dart:convert';
+import 'dart:io' as io;
+
 //import 'package:video_player/video_player.dart';
 
 final exercises = List<int>.generate(6, (i) => i);
+
+Note theNote;
+String notes = "";
 
 //Main class
 class Personal extends StatelessWidget {
@@ -55,42 +74,73 @@ class _PersonalHomePage extends State<PersonalHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context)
-        .size; //this gives us total height and width of our device
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Stack(children: <Widget>[
-      Container(
-        height: size.height * .35,
-        color: Color(0xFFF5CEB8),
-      ),
-      SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(children: <Widget>[
-                Text(
-                  "Learn",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline2
-                      .copyWith(fontWeight: FontWeight.w900),
-                ),
-                ElevatedButton(
-                    child: const Text("Full Program"),
-                    onPressed: () => Navigator.pushNamed(context, 'days')),
-                Text(
-                  "Day 2: Today you will learn the importance of the power-pose",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(fontWeight: FontWeight.w900),
-                ),
-
-                Text(content),
-                //need to space this out from previous text
-              ])))
-    ])));
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+                child: const Text("Notes"),
+                onPressed: () => Navigator.pushNamed(context, 'days')),
+            ElevatedButton(onPressed: null, child: const Text("Full Program"))
+          ],
+        ),
+        titleSection,
+        Container(
+          padding: const EdgeInsets.all(32),
+          child: Text(content),
+        ),
+        //divider used to avoid overlapping with navigation bar
+        const Divider(
+          height: 80,
+          thickness: 5,
+          indent: 20,
+          endIndent: 20,
+        ),
+      ],
+    ))));
   }
+
+  Widget titleSection = Container(
+    padding: const EdgeInsets.all(32),
+    child: Row(
+      children: [
+        Expanded(
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Container(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Learn',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                'Learn Day1 title',
+                style: TextStyle(
+                  color: Colors.grey[500],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Icon(
+          Icons.wb_sunny_rounded,
+          color: Colors.red[500],
+        ),
+        Text('Day 2'),
+      ],
+    ),
+  );
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
@@ -110,20 +160,22 @@ class _FullProgramPage extends State<FullProgramPage> {
     return Column(
       children: [
         Container(
-          height: size.height * .10,
+          constraints: BoxConstraints.expand(height: size.height * .10),
           color: Color(0xFFF5CEB8),
-          child: Text('Workout Routine',
+          child: Text('Notes',
               style: TextStyle(
+                //fontSize: 10.0,
                 fontWeight: FontWeight.normal,
               )),
         ),
         //VideoPlayer(),
-        ListView.builder(
+/*         ListView.builder(
             shrinkWrap: true,
             itemCount: exercises.length,
             itemBuilder: (BuildContext context, int index) {
               return ExerciseWidget(exercises[index]);
-            }),
+            }), */
+        Container(child: NotePage(theNote)),
         ElevatedButton(
             child: const Text('Back'),
             onPressed: () => Navigator.pushNamed(context, '/'))
@@ -134,6 +186,7 @@ class _FullProgramPage extends State<FullProgramPage> {
 
 class ExerciseWidget extends StatelessWidget {
   final int exercises; // exercise data
+
   const ExerciseWidget(
     this.exercises, {
     Key key,
@@ -141,24 +194,16 @@ class ExerciseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        margin: EdgeInsets.only(top: 15.0, left: 6.0, right: 6.0, bottom: 6.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: ExpansionTile(
-          title: Text(
-            'Day ' + exercises.toString(),
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          children: <Widget>[Text('exercise details')],
-          backgroundColor: Colors.yellow,
-          initiallyExpanded: false,
-        ));
+    bool _isEditingText = false;
+    TextEditingController _editingController;
+    String initialText = "Initial Text";
+    return Container();
   }
 }
 
-/* class VideoPlayer extends StatefulWidget {
+
+
+/*class VideoPlayer extends StatefulWidget {
   VideoPlayer({Key key}) : super(key: key);
 
   @override
@@ -212,3 +257,101 @@ class _VideoPlayerState extends State<VideoPlayer> {
     );
   }
 } */
+class Note {
+  int id;
+  // String title;
+  String content;
+  DateTime timeCreated;
+  DateTime lastEdited;
+  Color colorNote;
+  int archived = 0;
+
+  Note(this.id, this.content, this.timeCreated, this.lastEdited, this.colorNote,
+      this.archived);
+
+  Map<String, dynamic> toMap(bool forUpdate) {
+    var data = {
+//      'id': id,  since id is auto incremented in the database we don't need to send it to the insert query.
+      //'title': utf8.encode(title),
+      'content': utf8.encode(content),
+      'timeCreated': epochFromDate(timeCreated),
+      'lastEdited': epochFromDate(lastEdited),
+      'colorNote': colorNote.value,
+      'is_archived': archived //  for later use for integrating archiving
+    };
+    if (forUpdate) {
+      data["id"] = this.id;
+    }
+    return data;
+  }
+
+  int epochFromDate(DateTime dt) {
+    return dt.millisecondsSinceEpoch ~/ 1000;
+  }
+
+  void saveNote() {
+    archived = 1;
+  }
+
+  @override
+  toString() {
+    return {
+      'id': id,
+      // 'title': title,
+      'content': content,
+      'date_created': epochFromDate(timeCreated),
+      'date_last_edited': epochFromDate(lastEdited),
+      'note_color': colorNote.toString(),
+      'is_archived': archived
+    }.toString();
+  }
+}
+
+class NotePage extends StatefulWidget {
+  NotePage(this._note);
+
+  final Note _note;
+
+  @override
+  NotePageState createState() => NotePageState();
+}
+
+class NotePageState extends State<NotePage> {
+  Note note;
+  //String title;
+  var _editableNote;
+  final _contentController = TextEditingController();
+
+  void initState() {
+    _editableNote = widget._note;
+    _contentController.text = _editableNote.content;
+  }
+
+  var now = DateTime.now();
+
+  Widget _bottomBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        FlatButton(
+          child: Text(
+            "New Note\n",
+            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+          ),
+          onPressed: () => newNoteTapped(context),
+        )
+      ],
+    );
+  }
+
+  void newNoteTapped(BuildContext cxt) {
+    var emptyNote =
+        new Note(-1, "", DateTime.now(), DateTime.now(), Colors.white, 0);
+    Navigator.push(
+        cxt, MaterialPageRoute(builder: (cxt) => NotePage(emptyNote)));
+  }
+
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
