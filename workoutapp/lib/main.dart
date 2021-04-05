@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,22 +25,61 @@ void main() async {
   runApp(WorkoutApp());
 }
 
+// make initial api requests before app starts
+Future<HashMap<String,Response>> initRequests() async {
+  HashMap out = new HashMap<String,Response>();
+  try {
+    // get exercise names todo could get pairs of img-description instead?
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseNames",
+    );
+    out.putIfAbsent("exerciseNames", () => response);
+
+    // other...
+
+    return out;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
 class WorkoutApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      home: new HomeScreen(),
-      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-        DefaultMaterialLocalizations.delegate,
-        DefaultWidgetsLocalizations.delegate,
-      ],
+    return FutureBuilder(
+        future: initRequests(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return CupertinoApp(
+              home: new HomeScreen(snapshot.data),
+              localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+                DefaultMaterialLocalizations.delegate,
+                DefaultWidgetsLocalizations.delegate,
+              ],
+            );
+          }
+          else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator()
+          );
+        }
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
+  final requests;
+  const HomeScreen(this.requests, {
+    Key key,
+  }) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
+
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -85,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else {
           return CupertinoTabView(
             navigatorKey: fourthTabNavKey,
-            builder: (BuildContext context) => Library(),
+            builder: (BuildContext context) => Library(widget.requests),
           );
         }
       },
