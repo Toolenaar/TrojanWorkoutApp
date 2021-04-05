@@ -10,9 +10,6 @@ Future<String> call() async {
     Response response = await Dio().get(
         "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
     );
-    print(response);
-    print(response.data.toString());
-    //print(response.data['Day1Physical']);
     return response.data.toString();
   } catch (e) {
     print(e);
@@ -47,9 +44,10 @@ Future<List> getFinishQuestions() async {
 Future<void> postAnswers(List answers) async {
   try {
     var userId = "UserId1"; // todo get current user
+    var day = 1; // todo get day for current user
     await Dio().post(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/answers",
-      data: {"UserId":userId,"Answers":answers}
+      data: {"UserId":userId,"Answers":answers,"Day":day}
     );
   } catch (e) {
     print(e);
@@ -271,7 +269,10 @@ class _QuestionsPage extends State<QuestionsPage> {
           else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
-          return Text("Loading...");
+          return Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator()
+          );
         }
     );
   }
