@@ -26,14 +26,22 @@ void main() async {
 }
 
 // make initial api requests before app starts
-Future<HashMap<String,Response>> initRequests() async {
-  HashMap out = new HashMap<String,Response>();
+Future<HashMap> initRequests() async {
+  HashMap out = new HashMap();
   try {
     // get exercise names todo could get pairs of img-description instead?
     Response response = await Dio().get(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseNames",
     );
-    out.putIfAbsent("exerciseNames", () => response);
+    out.putIfAbsent("exerciseNames", () => response.data.split(","));
+
+    // get current program day for the current user
+    const userId = "UserId1";
+    response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/date?user=$userId",
+    );
+    var responses = response.data.split(",");
+    out.putIfAbsent("programDay", () => {"physical":responses[0], "mental":responses[1]});
 
     // other...
 
@@ -112,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (index == 0) {
           return CupertinoTabView(
             navigatorKey: firstTabNavKey,
-            builder: (BuildContext context) => Workouts(),
+            builder: (BuildContext context) => Workouts(widget.requests),
           );
         } else if (index == 1) {
           return CupertinoTabView(

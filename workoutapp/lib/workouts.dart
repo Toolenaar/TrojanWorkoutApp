@@ -1,61 +1,19 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future<String> call() async {
-  try {
-    Response response = await Dio().get(
-        "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
-    );
-    return response.data.toString();
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
-
-Future<List> getQuitQuestions() async {
-  try {
-    Response response = await Dio().get(
-      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/quitQuestions",
-    );
-    return response.data.values.toList();
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
-
-Future<List> getFinishQuestions() async {
-  try {
-    Response response = await Dio().get(
-      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/finishQuestions",
-    );
-    return response.data.values.toList();
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
-
-Future<void> postAnswers(List answers) async {
-  try {
-    var userId = "UserId1"; // todo get current user
-    var day = 1; // todo get day for current user
-    await Dio().post(
-      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/answers",
-      data: {"UserId":userId,"Answers":answers,"Day":day}
-    );
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
+//----------widgets----------------
 
 class Workouts extends StatefulWidget {
+  final requests;
+  Workouts(this.requests, {
+    Key key,
+  }) : super(key: key);
+
   @override
   _WorkoutsState createState() => _WorkoutsState();
 }
@@ -74,8 +32,8 @@ class _WorkoutsState extends State<Workouts> {
       routes: {
         '/': (_) => WorkoutsHomePage(exercises),
         'exercise': (_) => ExercisePage(0),
-        'finishQuestions': (_) => QuestionsPage(getFinishQuestions),
-        'quitQuestions': (_) => QuestionsPage(getQuitQuestions)
+        'finishQuestions': (_) => QuestionsPage(getFinishQuestions, widget.requests),
+        'quitQuestions': (_) => QuestionsPage(getQuitQuestions, widget.requests)
       },
     );
   }
@@ -224,7 +182,8 @@ class _ExercisePageState extends State<ExercisePage> {
 }
 class QuestionsPage extends StatefulWidget {
   final Function getQuestions;
-  const QuestionsPage(this.getQuestions, {
+  final HashMap requests;
+  const QuestionsPage(this.getQuestions, this.requests, {
     Key key,
   }) : super(key: key);
 
@@ -257,7 +216,7 @@ class _QuestionsPage extends State<QuestionsPage> {
                       onPressed: () async {
                         if (!answers.contains(
                             "null")) { // only return home if all questions have been answered
-                          await postAnswers(answers);
+                          await postAnswers(answers, widget.requests);
                           Navigator.popUntil(context, ModalRoute.withName(
                               '/')); // todo go to workout summary first?
                         }
@@ -332,5 +291,58 @@ class _QuestionWidget extends State<QuestionWidget> {
           ),
         ]
     );
+  }
+}
+
+//------------requests--------------
+
+
+Future<String> call() async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
+    );
+    return response.data.toString();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<List> getQuitQuestions() async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/quitQuestions",
+    );
+    return response.data.values.toList();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<List> getFinishQuestions() async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/finishQuestions",
+    );
+    return response.data.values.toList();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<void> postAnswers(List answers, HashMap requests) async {
+  try {
+    var userId = "UserId1"; // todo get current user
+    var day = requests["programDay"]["physical"];
+    await Dio().post(
+        "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/answers",
+        data: {"UserId":userId,"Answers":answers,"Day":day}
+    );
+  } catch (e) {
+    print(e);
+    return null;
   }
 }

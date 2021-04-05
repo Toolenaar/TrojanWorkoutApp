@@ -4,13 +4,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+
+//------------widgets-------------
+
 class Library extends StatelessWidget {
   final requests;
   Library(this.requests, {
     Key key,
   }) : super(key: key);
 
-  // final exercises = List<String>.generate(2, (i) => "exercise${i+1}"); // all exercises
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<String>>(
@@ -33,23 +35,6 @@ class Library extends StatelessWidget {
           );
         }
     );
-  }
-}
-
-Future<List<String>> getExerciseNames(HashMap requests) async {
-  return await requests["exerciseNames"].data.split(",");
-}
-
-
-Future<String> getDescription(String exercise) async {
-  try {
-    Response response = await Dio().get(
-      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseDescription?name=$exercise",
-    );
-    return response.data.toString();
-  } catch (e) {
-    print(e);
-    return null;
   }
 }
 
@@ -104,5 +89,23 @@ class ExerciseWidget extends StatelessWidget {
         )
 
     );
+  }
+}
+
+//-------------requests---------------
+
+Future<List<String>> getExerciseNames(HashMap requests) async {
+  return await requests["exerciseNames"];
+}
+
+Future<String> getDescription(String exercise) async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseDescription?name=$exercise",
+    );
+    return response.data.toString();
+  } catch (e) {
+    print(e);
+    return null;
   }
 }
