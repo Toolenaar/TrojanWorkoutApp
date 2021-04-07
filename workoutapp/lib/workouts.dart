@@ -1,29 +1,19 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future<String> call() async {
-  try {
-    Response response = await Dio().get(
-        "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader: "<ID>"
-          }
-        )
-    );
-    print(response);
-    return response.data.toString();
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
+//----------widgets----------------
 
 class Workouts extends StatefulWidget {
+  final requests;
+  Workouts(this.requests, {
+    Key key,
+  }) : super(key: key);
+
   @override
   _WorkoutsState createState() => _WorkoutsState();
 }
@@ -35,8 +25,6 @@ class _WorkoutsState extends State<Workouts> {
   }
 
   final exercises = List<int>.generate(5, (i) => i); // today's exercises data
-  final finishQuestions = List<int>.generate(3, (i) => i); // finish questions data
-  final quitQuestions = List<int>.generate(2, (i) => i); // quit questions data
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +32,8 @@ class _WorkoutsState extends State<Workouts> {
       routes: {
         '/': (_) => WorkoutsHomePage(exercises),
         'exercise': (_) => ExercisePage(0),
-        'finishQuestions': (_) => QuestionsPage(finishQuestions),
-        'quitQuestions': (_) => QuestionsPage(quitQuestions)
+        'finishQuestions': (_) => QuestionsPage(getFinishQuestions, widget.requests),
+        'quitQuestions': (_) => QuestionsPage(getQuitQuestions, widget.requests)
       },
     );
   }
@@ -65,29 +53,29 @@ class WorkoutsHomePage extends StatelessWidget {
     return Column(
         children: [
           Row(
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: ElevatedButton.icon(
-                      onPressed: () => {},
-                      icon: Icon(Icons.add, size: 20),
-                      label: Text("Subscription"),
-                  ),//do stuff
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: ElevatedButton.icon(
+                  onPressed: () => {},
+                  icon: Icon(Icons.add, size: 20),
+                  label: Text("Subscription"),
                 ),
-                Align(
-                  alignment: Alignment(1000000, 2.5),
-                  child: ElevatedButton(
-                      onPressed: () => {},
-                      child: const Text("Daily Challenge")
-                  ),
+              ),
+              Align(
+                alignment: Alignment(1000000, 2.5),
+                child: ElevatedButton(
+                    onPressed: () => {},
+                    child: const Text("Daily Challenge")
                 ),
-                Container(
-                  height: size.height * .05,
-                  decoration: BoxDecoration(
-                    color: Colors.purple,
-                  ),
+              ),
+              Container(
+                height: size.height * .05,
+                decoration: BoxDecoration(
+                  color: Colors.purple,
                 ),
-              ],
+              ),
+            ],
           ),
           ElevatedButton(
               child: const Text("Today's workout"),
@@ -136,7 +124,7 @@ class ExerciseWidget extends StatelessWidget {
           ),
           children: <Widget>[
             Text('exercise details',
-            style: TextStyle(color: Colors.lightBlue),)
+              style: TextStyle(color: Colors.lightBlue),)
           ],
           backgroundColor: Colors.lightGreen,
           initiallyExpanded: false,
@@ -173,19 +161,12 @@ class _ExercisePageState extends State<ExercisePage> {
     var timer = new Timer(Duration(seconds: 2), () {nextPage(context);});
     return Row(
       children: [
-        // CupertinoButton(
-        //   child: const Text('Back'),
-        //   onPressed: () {
-        //     widget.timer.cancel();
-        //     Navigator.of(context).pop(true);
-        //   },
-        // ),
         ElevatedButton(
-          child: const Text('Skip'),
-          onPressed: () {
-            timer.cancel();
-            nextPage(context);
-          }
+            child: const Text('Skip'),
+            onPressed: () {
+              timer.cancel();
+              nextPage(context);
+            }
         ),
         ElevatedButton(
           child: const Text('Quit'),
@@ -200,8 +181,9 @@ class _ExercisePageState extends State<ExercisePage> {
   }
 }
 class QuestionsPage extends StatefulWidget {
-  final questions;
-  const QuestionsPage(this.questions, {
+  final Function getQuestions;
+  final HashMap requests;
+  const QuestionsPage(this.getQuestions, this.requests, {
     Key key,
   }) : super(key: key);
 
@@ -210,34 +192,55 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class _QuestionsPage extends State<QuestionsPage> {
+  List answers = List<String>.generate((2), (index) => "null");
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children: [
-          ListView.builder( // list of exercises in workout
-            shrinkWrap: true,
-            itemCount: widget.questions.length,
-            itemBuilder: (BuildContext context, int index) {
-              return QuestionWidget(widget.questions[index]);
-            },
-          ),
-          CupertinoButton(
-            child: const Text("submit"),
-            onPressed: () {
-              //todo how to access answers?
+    return FutureBuilder(
+        future: widget.getQuestions(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column( // success
+                children: [
+                  ListView.builder( // list of exercises in workout
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return QuestionWidget(snapshot.data[index], (answer) =>
+                      answers[index] = answer);
+                    },
+                    itemCount: snapshot.data.length,
+                  ),
 
-              //return home
-              Navigator.popUntil(context, ModalRoute.withName('/')); // todo go to workout summary first?
-            }
-          )
-        ]
+                  CupertinoButton(
+                      child: const Text("submit"),
+                      onPressed: () async {
+                        if (!answers.contains(
+                            "null")) { // only return home if all questions have been answered
+                          await postAnswers(answers, widget.requests);
+                          Navigator.popUntil(context, ModalRoute.withName(
+                              '/')); // todo go to workout summary first?
+                        }
+                      }
+                  )
+                ]
+            );
+          }
+          else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Align(
+              alignment: Alignment.center,
+              child: CircularProgressIndicator()
+          );
+        }
     );
   }
 }
 
 class QuestionWidget extends StatefulWidget {
-  final int question;
-  const QuestionWidget(this.question, {
+  final Map question;
+  final onChange;
+  QuestionWidget(this.question, this.onChange, {
     Key key,
   }) : super(key: key);
 
@@ -253,16 +256,17 @@ class _QuestionWidget extends State<QuestionWidget> {
         children: [
           Card(
               child: ListTile(
-                  title: Text("Question " + (widget.question+1).toString())
+                  title: Text(widget.question["Question"])
               )
           ),
           Card(
               child: ListTile(
-                  title: Text("Answer 1"),
+                  title: Text(widget.question["Answers"][0]),
                   leading: Radio(
                       groupValue: answer,
                       value: "a1",
                       onChanged: (value) {
+                        widget.onChange(value);
                         setState(() {
                           answer = value;
                         });
@@ -272,11 +276,12 @@ class _QuestionWidget extends State<QuestionWidget> {
           ),
           Card(
               child: ListTile(
-                  title: Text("Answer 2"),
+                  title: Text(widget.question["Answers"][1]),
                   leading: Radio(
                       groupValue: answer,
                       value: "a2",
                       onChanged: (value) {
+                        widget.onChange(value);
                         setState(() {
                           answer = value;
                         });
@@ -286,5 +291,58 @@ class _QuestionWidget extends State<QuestionWidget> {
           ),
         ]
     );
+  }
+}
+
+//------------requests--------------
+
+
+Future<String> call() async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
+    );
+    return response.data.toString();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<List> getQuitQuestions() async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/quitQuestions",
+    );
+    return response.data.values.toList();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<List> getFinishQuestions() async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/finishQuestions",
+    );
+    return response.data.values.toList();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<void> postAnswers(List answers, HashMap requests) async {
+  try {
+    var userId = "UserId1"; // todo get current user
+    var day = requests["programDay"]["physical"];
+    await Dio().post(
+        "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/answers",
+        data: {"UserId":userId,"Answers":answers,"Day":day}
+    );
+  } catch (e) {
+    print(e);
+    return null;
   }
 }
