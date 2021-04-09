@@ -57,10 +57,9 @@ class WorkoutsHomePage extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.topLeft,
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
                   onPressed: () => {},
-                  icon: Icon(Icons.add, size: 20),
-                  label: Text("Subscription"),
+                  child: Text("Subscription"),
                 ),
               ),
               Align(
@@ -161,24 +160,65 @@ class _ExercisePageState extends State<ExercisePage> {
   @override
   Widget build(BuildContext context) {
     var timer = new Timer(Duration(seconds: 2), () {nextPage(context);});
-    return Row(
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.black, width: 4.0),
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        ),
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: Stack(
       children: [
-        ElevatedButton(
+        Positioned(
+         top: 20,
+         left: 325,
+        child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.green, // background
+              onPrimary: Colors.white, // foreground
+            ),
             child: const Text('Skip'),
             onPressed: () {
               timer.cancel();
               nextPage(context);
             }
         ),
-        ElevatedButton(
+        ),
+        Positioned(
+          top: 20,
+          left: 20,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.red, // background
+            onPrimary: Colors.white, // foreground
+          ),
           child: const Text('Quit'),
           onPressed: () {
             timer.cancel();
             Navigator.pushReplacementNamed(context, 'quitQuestions');
           },
         ),
-        Text(arr[widget.pageIndex].toString()),
+        ),
+
+        Positioned(
+        top: 525,
+        left: 200,
+        child: Text(arr[widget.pageIndex].toString(),
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        ),
+
+        Positioned(
+          top: 20,
+          left: 10,
+          child: Image.network('https://asweatlife.com/wp-content/uploads/2018/04/MG_5692.jpg',
+          width: 383,
+          height: 600,
+          ),
+        ),
       ],
+      )
     );
   }
 }
