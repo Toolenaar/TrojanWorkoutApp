@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -46,48 +47,63 @@ class ExerciseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        margin: EdgeInsets.only(top: 25.0, left: 6.0, right: 6.0, bottom: 6.0),
-        shadowColor: Colors.blue,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: ExpansionTile(
-          title: Row(
-              children: [
-                Text("img"),
-                Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text(exercise,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    )
-                )
-              ]
-          ),
-          children: <Widget>[
-            Row(
-                children: [
-                  FutureBuilder<String>(
-                      future: getDescription(exercise),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Flexible(
-                              child: Text(snapshot.data,
+    return FutureBuilder<HashMap>(
+        future: getExercise(exercise),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Card(
+                margin: EdgeInsets.only(
+                    top: 25.0, left: 6.0, right: 6.0, bottom: 6.0),
+                shadowColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: ExpansionTile(
+                  title: Row(
+                      children: [
+                        Container(
+                          width: 70.0,
+                          height: 70.0,
+                          child: Image.network(
+                            snapshot.data["img"], fit: BoxFit.fill,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                          ),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Text(exercise,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )
+                        )
+                      ]
+                  ),
+                  children: <Widget>[
+                    Row(
+                        children: [
+                          Flexible(
+                              child: Text(snapshot.data["description"],
                                   style: TextStyle(fontWeight: FontWeight.bold)
                               )
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
-                        }
-                        return CircularProgressIndicator();
-                      }
-                  ),
-                ]
-            )
-          ],
-          initiallyExpanded: false,
-        )
-
+                          )
+                        ]
+                    )
+                  ],
+                  initiallyExpanded: false,
+                )
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(
+              child: CircularProgressIndicator()
+          );
+        }
     );
   }
 }
@@ -98,12 +114,18 @@ Future<List<String>> getExerciseNames(HashMap requests) async {
   return await requests["exerciseNames"];
 }
 
-Future<String> getDescription(String exercise) async {
+Future<HashMap> getExercise(String exercise) async {
   try {
     Response response = await Dio().get(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseDescription?name=$exercise",
     );
-    return response.data.toString();
+    HashMap out = new HashMap();
+    out.putIfAbsent("description", () => response.data);
+    response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test?name=$exercise", // todo should be using exerciseImg, but auth is weird...
+    );
+    out.putIfAbsent("img", () => response.data);
+    return out;
   } catch (e) {
     print(e);
     return null;

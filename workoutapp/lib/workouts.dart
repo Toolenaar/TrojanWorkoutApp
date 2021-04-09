@@ -82,18 +82,6 @@ class WorkoutsHomePage extends StatelessWidget {
               child: const Text("Today's workout"),
               onPressed: () => Navigator.pushNamed(context, 'exercise')
           ),
-          Image.network(requests["test"],fit: BoxFit.fill,
-            loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: CircularProgressIndicator(
-                  value: loadingProgress.expectedTotalBytes != null ?
-                  loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                      : null,
-                ),
-              );
-            },
-          ),
           ListView.builder( // list of exercises in workout
             shrinkWrap: true,
             itemCount: exercises.length,
