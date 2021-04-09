@@ -1,28 +1,22 @@
 import 'dart:async';
 //import 'dart:html';
-
 //import 'package:sqflite/sqflite.dart';
 //import 'package:path_provider/path_provider.dart';
 //import 'package:sqflite/sqlite_api.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' show utf8;
-
 import 'package:flutter/services.dart' show rootBundle;
-
 import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 //import 'dart:html';
 //import 'dart:html';
 import 'dart:io';
-
 import 'package:flutter/services.dart' show rootBundle;
-
 import 'dart:convert';
 import 'dart:io' as io;
-
-//import 'package:video_player/video_player.dart';
+import 'dart:collection';
+import 'package:dio/dio.dart';
 
 final exercises = List<int>.generate(6, (i) => i);
 
@@ -30,14 +24,27 @@ Note theNote;
 String notes = "";
 
 //Main class
-class Personal extends StatelessWidget {
+class Personal extends StatefulWidget {
   final exercises = List<int>.generate(6, (i) => i); // today's exercises data
+  final requests;
+  Personal(this.requests, {
+    Key key,
+  }) : super(key: key);
 
+  @override
+  _PersonalState createState() => _PersonalState();
+
+}
+class _PersonalState extends State<Personal> {
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (_) => PersonalHomePage(exercises),
+        '/': (_) => PersonalHomePage(exercises, widget.requests),
         'days': (_) => FullProgramPage()
       },
     );
@@ -47,8 +54,9 @@ class Personal extends StatelessWidget {
 //Home Page
 class PersonalHomePage extends StatefulWidget {
   final exercises;
+  final requests;
   const PersonalHomePage(
-    this.exercises, {
+    this.exercises,this.requests, {
     Key key,
   }) : super(key: key);
 
@@ -89,9 +97,25 @@ class _PersonalHomePage extends State<PersonalHomePage> {
           ],
         ),
         titleSection,
-        Container(
-          padding: const EdgeInsets.all(32),
-          child: Text(content),
+        Row(
+
+                children: [
+                  FutureBuilder<String>(
+                      future: getDescription("exercise1"),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Flexible(
+                              child: Text(snapshot.data,
+                                  style: TextStyle(fontWeight: FontWeight.bold)
+                              )
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return CircularProgressIndicator();
+                      }
+                  ),
+                ]
         ),
         //divider used to avoid overlapping with navigation bar
         const Divider(
@@ -168,13 +192,6 @@ class _FullProgramPage extends State<FullProgramPage> {
                 fontWeight: FontWeight.normal,
               )),
         ),
-        //VideoPlayer(),
-/*         ListView.builder(
-            shrinkWrap: true,
-            itemCount: exercises.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ExerciseWidget(exercises[index]);
-            }), */
         Container(child: NotePage(theNote)),
         ElevatedButton(
             child: const Text('Back'),
@@ -202,61 +219,6 @@ class ExerciseWidget extends StatelessWidget {
 }
 
 
-
-/*class VideoPlayer extends StatefulWidget {
-  VideoPlayer({Key key}) : super(key: key);
-
-  @override
-  _VideoPlayerState createState() => _VideoPlayerState();
-}
-
-class _VideoPlayerState extends State<VideoPlayer> {
-  VideoPlayerController controller;
-  Future<void> _initializeVideoPlayerFuture;
-
-  @override
-  void initState() {
-    controller = VideoPlayerController.asset(
-        'audioFile/What’s standing strong mentally.m4a');
-    _initializeVideoPlayerFuture = controller.initialize();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  Widget build(BuildContext context) {
-    FutureBuilder(
-        future: _initializeVideoPlayerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: VideoPlayer(),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        });
-    FloatingActionButton(
-      onPressed: () {
-        setState(() {
-          if (controller.value.isPlaying) {
-            controller.pause();
-          } else {
-            controller.play();
-          }
-        });
-      },
-      child: Icon(
-        controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-      ),
-    );
-  }
-} */
 class Note {
   int id;
   // String title;
@@ -353,5 +315,19 @@ class NotePageState extends State<NotePage> {
 
   Widget build(BuildContext context) {
     return Container();
+  }
+}
+
+//-------------requests---------------
+
+Future<String> getDescription(String exercise) async {
+  try {
+    Response response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseDescription?name=$exercise",
+    );
+    return response.data.toString();
+  } catch (e) {
+    print(e);
+    return null;
   }
 }
