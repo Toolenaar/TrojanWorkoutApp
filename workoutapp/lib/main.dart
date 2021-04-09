@@ -43,6 +43,12 @@ Future<HashMap> initRequests() async {
     var responses = response.data.split(",");
     out.putIfAbsent("programDay", () => {"physical":responses[0], "mental":responses[1]});
 
+    // todo test
+    Response url = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
+    );
+    out.putIfAbsent("test", () => url.data);
+
     // other...
 
     return out;

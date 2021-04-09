@@ -30,7 +30,7 @@ class _WorkoutsState extends State<Workouts> {
   Widget build(BuildContext context) {
     return CupertinoApp(
       routes: {
-        '/': (_) => WorkoutsHomePage(exercises),
+        '/': (_) => WorkoutsHomePage(exercises, widget.requests),
         'exercise': (_) => ExercisePage(0),
         'finishQuestions': (_) => QuestionsPage(getFinishQuestions, widget.requests),
         'quitQuestions': (_) => QuestionsPage(getQuitQuestions, widget.requests)
@@ -41,8 +41,9 @@ class _WorkoutsState extends State<Workouts> {
 
 class WorkoutsHomePage extends StatelessWidget {
   final exercises;
+  final requests;
 
-  const WorkoutsHomePage(this.exercises, {
+  const WorkoutsHomePage(this.exercises, this.requests, {
     Key key,
   }) : super(key: key);
 
@@ -81,16 +82,17 @@ class WorkoutsHomePage extends StatelessWidget {
               child: const Text("Today's workout"),
               onPressed: () => Navigator.pushNamed(context, 'exercise')
           ),
-          FutureBuilder<String>( // todo example widget containing API data
-              future: call(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data);
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return CircularProgressIndicator();
-              }
+          Image.network(requests["test"],fit: BoxFit.fill,
+            loadingBuilder:(BuildContext context, Widget child,ImageChunkEvent loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null ?
+                  loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                      : null,
+                ),
+              );
+            },
           ),
           ListView.builder( // list of exercises in workout
             shrinkWrap: true,
@@ -299,10 +301,18 @@ class _QuestionWidget extends State<QuestionWidget> {
 
 Future<String> call() async {
   try {
-    Response response = await Dio().get(
+    Response url = await Dio().get(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
     );
-    return response.data.toString();
+    Response response = await Dio().get(
+      url.data
+    );
+    return response.data;
+    // File file = File("assets/bruce-lee.jpg");
+    // var raf = file.openSync(mode: FileMode.write);
+    // raf.writeByteSync(response.data);
+    // await raf.close();
+    // return "bruce-lee.jpg";
   } catch (e) {
     print(e);
     return null;
