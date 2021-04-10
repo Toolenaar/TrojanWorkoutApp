@@ -44,17 +44,22 @@ Future<HashMap> initRequests() async {
     out.putIfAbsent("programDay", () => {"physical":days[0], "mental":days[1]});
 
     // get list of workouts and their exercises
-    // format: workout1:ex1,ex2;workout2:ex1,ex2;etc
+    // format: workout1:ex1?descriptionURL-imgURL,ex2?descriptionURL-imgURL;workout2:ex1?descriptionURL-imgURL,ex2?descriptionURL-imgURL;etc
     response = await Dio().get(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/workouts",
     );
     List responses = response.data.split(";");
     HashMap workouts = new HashMap();
-    responses.forEach((elem) {
+    for (var elem in responses) {
       List workout = elem.split(":");
       List exercises = workout[1].split(",");
+      // HashMap exercisesMap = new HashMap(); // exercise : [descriptionURL, imgURL]
+      // for (var exercise in exercises) {
+      //   List urls = exercise.split("?");
+      //   exercisesMap.putIfAbsent(urls[0], () => urls[1].split("-"));
+      // }
       workouts.putIfAbsent(workout[0], () => exercises);
-    });
+    }
     out.putIfAbsent("workouts", () => workouts);
 
     // other...

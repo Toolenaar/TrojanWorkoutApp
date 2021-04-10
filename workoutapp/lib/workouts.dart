@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:workoutapp/library.dart';
 
 //----------widgets----------------
 
@@ -132,7 +133,6 @@ class ExercisePage extends StatefulWidget {
 }
 
 class _ExercisePageState extends State<ExercisePage> {
-  // final arr = List<int>.generate(5, (i) => i);
 
   nextPage(context) {
     if (widget.index + 1 < widget.exercises.length) { // go to next exercise
@@ -149,77 +149,97 @@ class _ExercisePageState extends State<ExercisePage> {
     var timer = new Timer(Duration(seconds: 5), () {
       nextPage(context);
     });
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 4.0),
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        ),
-        height: MediaQuery
-            .of(context)
-            .size
-            .height,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
-        child: Stack(
-          children: [
-            Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red, // background
-                      onPrimary: Colors.white, // foreground
+    return FutureBuilder(
+        future: getExercise(widget.exercises[widget.index]),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black, width: 4.0),
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                child: Stack(
+                  children: [
+                    Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.red, // background
+                              onPrimary: Colors.white, // foreground
+                            ),
+                            child: const Text('Quit'),
+                            onPressed: () {
+                              timer.cancel();
+                              Navigator.pushReplacementNamed(
+                                  context, 'quitQuestions');
+                            },
+                          ),
+                        )),
+                    Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.green, // background
+                                onPrimary: Colors.white, // foreground
+                              ),
+                              child: const Text('Skip'),
+                              onPressed: () {
+                                timer.cancel();
+                                nextPage(context);
+                              }
+                          ),
+                        )
                     ),
-                    child: const Text('Quit'),
-                    onPressed: () {
-                      timer.cancel();
-                      Navigator.pushReplacementNamed(context, 'quitQuestions');
-                    },
-                  ),
-                )),
-            Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green, // background
-                        onPrimary: Colors.white, // foreground
-                      ),
-                      child: const Text('Skip'),
-                      onPressed: () {
-                        timer.cancel();
-                        nextPage(context);
-                      }
-                  ),
+                    Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                            padding: EdgeInsets.all(50),
+                            child: Text(
+                              widget.exercises[widget.index],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black
+                              ),
+                            )
+                        )
+                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child:
+                        Container(
+                          width: 200.0,
+                          height: 200.0,
+                          child: Image.network(
+                            snapshot.data["img"],
+                            // 'https://asweatlife.com/wp-content/uploads/2018/04/MG_5692.jpg',
+                            width: 383,
+                            height: 600,
+                          ),
+                        )
+                    ),
+                  ],
                 )
-            ),
-            Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                    padding: EdgeInsets.all(50),
-                    child: Text(widget.exercises[widget.index],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black
-                      ),
-                    )
-                )
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Image.network(
-                'https://asweatlife.com/wp-content/uploads/2018/04/MG_5692.jpg',
-                width: 383,
-                height: 600,
-              ),
-            ),
-          ],
-        )
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(
+              child: CircularProgressIndicator()
+          );
+        }
     );
   }
 }
