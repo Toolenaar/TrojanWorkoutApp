@@ -40,14 +40,22 @@ Future<HashMap> initRequests() async {
     response = await Dio().get(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/date?user=$userId",
     );
-    var responses = response.data.split(",");
-    out.putIfAbsent("programDay", () => {"physical":responses[0], "mental":responses[1]});
+    List days = response.data.split(",");
+    out.putIfAbsent("programDay", () => {"physical":days[0], "mental":days[1]});
 
-    // todo test
-    Response url = await Dio().get(
-      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/test",
+    // get list of workouts and their exercises
+    // format: workout1:ex1,ex2;workout2:ex1,ex2;etc
+    response = await Dio().get(
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/workouts",
     );
-    out.putIfAbsent("test", () => url.data);
+    List responses = response.data.split(";");
+    HashMap workouts = new HashMap();
+    responses.forEach((elem) {
+      List workout = elem.split(":");
+      List exercises = workout[1].split(",");
+      workouts.putIfAbsent(workout[0], () => exercises);
+    });
+    out.putIfAbsent("workouts", () => workouts);
 
     // other...
 

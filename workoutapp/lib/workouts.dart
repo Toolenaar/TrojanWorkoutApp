@@ -31,7 +31,7 @@ class _WorkoutsState extends State<Workouts> {
     return CupertinoApp(
       routes: {
         '/': (_) => WorkoutsHomePage(exercises, widget.requests),
-        'exercise': (_) => ExercisePage(0),
+        //'exercise': (_) => ExercisePage(0),
         'finishQuestions': (_) => QuestionsPage(getFinishQuestions, widget.requests),
         'quitQuestions': (_) => QuestionsPage(getQuitQuestions, widget.requests)
       },
@@ -42,52 +42,49 @@ class _WorkoutsState extends State<Workouts> {
 class WorkoutsHomePage extends StatelessWidget {
   final exercises;
   final requests;
+  final workouts = List<int>.generate(2, (i) => i);
 
-  const WorkoutsHomePage(this.exercises, this.requests, {
+  WorkoutsHomePage(this.exercises, this.requests, {
     Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context)
+    var size = MediaQuery
+        .of(context)
         .size;
     return Column(
         children: [
-          Row(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: ElevatedButton(
-                  onPressed: () => {},
-                  child: Text("Subscription"),
-                ),
-              ),
-              Align(
-                alignment: Alignment(1000000, 2.5),
-                child: ElevatedButton(
-                    onPressed: () => {},
-                    child: const Text("Daily Challenge")
-                ),
-              ),
-              Container(
-                height: size.height * .05,
-                decoration: BoxDecoration(
-                  color: Colors.purple,
-                ),
-              ),
-            ],
+          ElevatedButton(
+              onPressed: () => {},
+              child: const Text("Physical Program")
           ),
           ElevatedButton(
-              child: const Text("Today's workout"),
-              onPressed: () => Navigator.pushNamed(context, 'exercise')
+              onPressed: () => {},
+              child: const Text("Daily Challenge")
           ),
           ListView.builder( // list of exercises in workout
             shrinkWrap: true,
-            itemCount: exercises.length,
+            itemCount: workouts.length,
             itemBuilder: (BuildContext context, int index) {
-              return ExerciseWidget(exercises[index]);
+              return ElevatedButton(
+                  child: Text(requests["workouts"].keys.toList()[index]),
+                  onPressed: () => Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (context) => ExercisePage(requests["workouts"].values.toList()[index], 0)
+                      )
+                  )
+              );
             },
-          )
+          ),
+          // ListView.builder( // list of exercises in workout
+          //   shrinkWrap: true,
+          //   itemCount: exercises.length,
+          //   itemBuilder: (BuildContext context, int index) {
+          //     return ExerciseWidget(exercises[index]);
+          //   },
+          // )
         ]
     );
   }
@@ -125,8 +122,9 @@ class ExerciseWidget extends StatelessWidget {
 
 
 class ExercisePage extends StatefulWidget {
-  final int pageIndex; // exercise data
-  ExercisePage(this.pageIndex, {
+  final exercises;
+  final index;
+  ExercisePage(this.exercises, this.index, {
     Key key,
   }) : super(key: key);
   @override
@@ -134,12 +132,13 @@ class ExercisePage extends StatefulWidget {
 }
 
 class _ExercisePageState extends State<ExercisePage> {
-  final arr = List<int>.generate(5, (i) => i);
+  // final arr = List<int>.generate(5, (i) => i);
 
   nextPage(context) {
-    if (widget.pageIndex+1 < arr.length) { // go to next exercise
+    if (widget.index + 1 < widget.exercises.length) { // go to next exercise
       Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => ExercisePage(widget.pageIndex + 1)));
+          builder: (context) =>
+              ExercisePage(widget.exercises, widget.index + 1)));
     } else { // go to finish questions
       Navigator.pushNamed(context, 'finishQuestions');
     }
@@ -147,69 +146,84 @@ class _ExercisePageState extends State<ExercisePage> {
 
   @override
   Widget build(BuildContext context) {
-    var timer = new Timer(Duration(seconds: 2), () {nextPage(context);});
+    var timer = new Timer(Duration(seconds: 5), () {
+      nextPage(context);
+    });
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.black, width: 4.0),
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Stack(
-      children: [
-        Positioned(
-         top: 20,
-         left: 325,
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.green, // background
-              onPrimary: Colors.white, // foreground
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        child: Stack(
+          children: [
+            Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red, // background
+                      onPrimary: Colors.white, // foreground
+                    ),
+                    child: const Text('Quit'),
+                    onPressed: () {
+                      timer.cancel();
+                      Navigator.pushReplacementNamed(context, 'quitQuestions');
+                    },
+                  ),
+                )),
+            Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green, // background
+                        onPrimary: Colors.white, // foreground
+                      ),
+                      child: const Text('Skip'),
+                      onPressed: () {
+                        timer.cancel();
+                        nextPage(context);
+                      }
+                  ),
+                )
             ),
-            child: const Text('Skip'),
-            onPressed: () {
-              timer.cancel();
-              nextPage(context);
-            }
-        ),
-        ),
-        Positioned(
-          top: 20,
-          left: 20,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.red, // background
-            onPrimary: Colors.white, // foreground
-          ),
-          child: const Text('Quit'),
-          onPressed: () {
-            timer.cancel();
-            Navigator.pushReplacementNamed(context, 'quitQuestions');
-          },
-        ),
-        ),
-
-        Positioned(
-        top: 525,
-        left: 200,
-        child: Text(arr[widget.pageIndex].toString(),
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        ),
-
-        Positioned(
-          top: 20,
-          left: 10,
-          child: Image.network('https://asweatlife.com/wp-content/uploads/2018/04/MG_5692.jpg',
-          width: 383,
-          height: 600,
-          ),
-        ),
-      ],
-      )
+            Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                    padding: EdgeInsets.all(50),
+                    child: Text(widget.exercises[widget.index],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black
+                      ),
+                    )
+                )
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Image.network(
+                'https://asweatlife.com/wp-content/uploads/2018/04/MG_5692.jpg',
+                width: 383,
+                height: 600,
+              ),
+            ),
+          ],
+        )
     );
   }
 }
+
 class QuestionsPage extends StatefulWidget {
   final Function getQuestions;
   final HashMap requests;
