@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (index == 1) {
           return CupertinoTabView(
             navigatorKey: secondTabNavKey,
-            builder: (BuildContext context) => Personal(),
+            builder: (BuildContext context) => Personal(widget.requests),
           );
         } else if (index == 2) {
           return CupertinoTabView(
