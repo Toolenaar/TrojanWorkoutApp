@@ -133,6 +133,10 @@ class ExercisePage extends StatefulWidget {
 }
 
 class _ExercisePageState extends State<ExercisePage> {
+  Timer _timer;
+  int _start = 5;
+  var _future;
+  bool started = false; // have to do this instead of running startTimer() in initState...
 
   nextPage(context) {
     if (widget.index + 1 < widget.exercises.length) { // go to next exercise
@@ -144,15 +148,55 @@ class _ExercisePageState extends State<ExercisePage> {
     }
   }
 
+  void startTimer() {
+    _timer = new Timer.periodic(
+      const Duration(seconds: 1),
+          (Timer timer) {
+            if (!mounted) return;
+            if (_start == 0) {
+                setState(() {
+                  timer.cancel();
+                  nextPage(context);
+                });
+            } else {
+              setState(() {
+                _start--;
+              });
+            }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    _future = getExercise(widget.exercises[widget.index]);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var timer = new Timer(Duration(seconds: 5), () {
-      nextPage(context);
-    });
     return FutureBuilder(
-        future: getExercise(widget.exercises[widget.index]),
+        future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            Image _img = new Image.network(snapshot.data["img"],
+              width: 383,
+              height: 600);
+            // only start timer once everything has been loaded
+            _img.image
+                .resolve(ImageConfiguration())
+                .addListener(ImageStreamListener((ImageInfo info, bool syncCall) {
+                  if (!started) {
+                    startTimer();
+                    started = true;
+                  }
+            }));
             return Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -180,7 +224,7 @@ class _ExercisePageState extends State<ExercisePage> {
                             ),
                             child: const Text('Quit'),
                             onPressed: () {
-                              timer.cancel();
+                              _timer.cancel();
                               Navigator.pushReplacementNamed(
                                   context, 'quitQuestions');
                             },
@@ -197,7 +241,7 @@ class _ExercisePageState extends State<ExercisePage> {
                               ),
                               child: const Text('Skip'),
                               onPressed: () {
-                                timer.cancel();
+                                _timer.cancel();
                                 nextPage(context);
                               }
                           ),
@@ -218,18 +262,26 @@ class _ExercisePageState extends State<ExercisePage> {
                     ),
                     Align(
                         alignment: Alignment.center,
-                        child:
-                        Container(
+                        child: Container(
                           width: 200.0,
                           height: 200.0,
-                          child: Image.network(
-                            snapshot.data["img"],
-                            // 'https://asweatlife.com/wp-content/uploads/2018/04/MG_5692.jpg',
-                            width: 383,
-                            height: 600,
-                          ),
+                          child: _img
                         )
                     ),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                            padding: EdgeInsets.all(150),
+                            child: Text(
+                              "$_start",
+                              style: TextStyle(
+                                  fontSize: 40.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black
+                              ),
+                            )
+                        )
+                    )
                   ],
                 )
             );
