@@ -132,7 +132,7 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                     Row(
                       children: [
                         FutureBuilder<String>(
-                            future: getText("1", "1MentalHeader"),
+                            future: getText(day, day +"MentalHeader"),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return Flexible(
@@ -160,7 +160,7 @@ class _PersonalHomePage extends State<PersonalHomePage> {
         //get desctriptions.
         Row(children: [
           FutureBuilder<String>(
-              future: getText("1", "1MentalDescription"),
+              future: getText(day, day+"MentalDescription"),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Flexible(
