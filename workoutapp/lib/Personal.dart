@@ -19,7 +19,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 final exercises = List<int>.generate(6, (i) => i);
 
@@ -71,8 +70,6 @@ class PersonalHomePage extends StatefulWidget {
 }
 
 class _PersonalHomePage extends State<PersonalHomePage> {
-  String _playing = "Play";
-  AudioPlayer _player = AudioPlayer();
   String content = '';
   fetchContentDescription() async {
     String responseText;
@@ -90,7 +87,6 @@ class _PersonalHomePage extends State<PersonalHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var day = widget.requests["programDay"]["mental"];
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -105,62 +101,10 @@ class _PersonalHomePage extends State<PersonalHomePage> {
             ElevatedButton(onPressed: null, child: const Text("Full Program"))
           ],
         ),
-        //get title
-        Container(
-          padding: const EdgeInsets.all(32),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        'Learn',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    /*Text(
-                      "",
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                      ),
-                    ),*/
-                    Row(
-                      children: [
-                        FutureBuilder<String>(
-                            future: getText(day, day +"MentalHeader"),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Flexible(
-                                    child: Text(snapshot.data,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)));
-                              } else if (snapshot.hasError) {
-                                return Text("${snapshot.error}");
-                              }
-                              return CircularProgressIndicator();
-                            }),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.wb_sunny_rounded,
-                color: Colors.red[500],
-              ),
-              Text(day),
-            ],
-          ),
-        ),
-        //get desctriptions.
+        titleSection,
         Row(children: [
           FutureBuilder<String>(
-              future: getText(day, day+"MentalDescription"),
+              future: getDescription("exercise1"),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Flexible(
@@ -172,27 +116,6 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                 return CircularProgressIndicator();
               }),
         ]),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: ElevatedButton(
-                  child: Text(_playing),
-                  onPressed: () {
-                    if (_playing == "Play") {
-                      setState(() {
-                        _playing = "Pause";
-                        _player.play(
-                            "https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FMental%2FWhat%E2%80%99s%20standing%20strong%20mentally.m4a?alt=media&token=38fb7332-2c67-4e49-aab0-755a19685c1f");
-                      });
-                    } else {
-                      setState(() {
-                        _playing = "Play";
-                        _player.pause();
-                      });
-                    }
-                  }),
-            )),
         //divider used to avoid overlapping with navigation bar
         const Divider(
           height: 80,
@@ -203,6 +126,41 @@ class _PersonalHomePage extends State<PersonalHomePage> {
       ],
     ))));
   }
+
+  Widget titleSection = Container(
+    padding: const EdgeInsets.all(32),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Learn',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Text(
+                'Learn Day1 title',
+                style: TextStyle(
+                  color: Colors.grey[500],
+                ),
+              ),
+            ],
+          ),
+        ),
+        Icon(
+          Icons.wb_sunny_rounded,
+          color: Colors.red[500],
+        ),
+        Text('Day 2'),
+      ],
+    ),
+  );
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
@@ -219,28 +177,25 @@ class _FullProgramPage extends State<FullProgramPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context)
         .size; //this gives us total height and width of our device
-    return Padding(
-        padding: EdgeInsets.only(top: 35, left: 10, right: 10),
-        child: Scaffold(
-            body: Container(
-                height: 200,
-                child: Column(children: <Widget>[
-                  Container(
-                    /* constraints:
-                        BoxConstraints.expand(height: size.height * .05), */
-                    color: Colors.grey,
-                    child: Text('',
-                        style: TextStyle(
-                          //fontSize: 10.0,
-                          fontWeight: FontWeight.normal,
-                        )),
-                  ),
-                  NoteScreen(),
-                  //TodoList(),
-                  ElevatedButton(
-                      child: const Text('Back'),
-                      onPressed: () => Navigator.pushNamed(context, '/'))
-                ]))));
+    return SingleChildScrollView(
+        child: Column(
+      children: [
+        Container(
+          constraints: BoxConstraints.expand(height: size.height * .05),
+          color: Colors.grey,
+          child: Text('',
+              style: TextStyle(
+                //fontSize: 10.0,
+                fontWeight: FontWeight.normal,
+              )),
+        ),
+        SizedBox(height: 400, child: NotePage()),
+        //TodoList(),
+        ElevatedButton(
+            child: const Text('Back'),
+            onPressed: () => Navigator.pushNamed(context, '/'))
+      ],
+    ));
   }
 }
 
@@ -265,7 +220,7 @@ class Note {
   int id;
   // String title;
   String content;
-  DateTime timeCreated;
+  //DateTime timeCreated;
 /*   DateTime lastEdited;
   Color colorNote;
   int archived = 0; */
@@ -273,7 +228,7 @@ class Note {
   Note(
     this.id,
     this.content,
-    this.timeCreated,
+    //this.timeCreated,
     /* this.lastEdited, */ /* this.colorNote, */
     /* this.archived */
   );
@@ -283,14 +238,14 @@ class Note {
 //      'id': id,  since id is auto incremented in the database we don't need to send it to the insert query.
       //'title': utf8.encode(title),
       'content': utf8.encode(content),
-      'timeCreated': epochFromDate(timeCreated),
+      //'timeCreated': epochFromDate(timeCreated),
 /*       'lastEdited': epochFromDate(lastEdited),
       'colorNote': colorNote.value,
       'is_archived': archived */ //  for later use for integrating archiving
     };
-    if (forUpdate) {
+/*     if (forUpdate) {
       data["id"] = this.id;
-    }
+    } */
     return data;
   }
 
@@ -308,7 +263,7 @@ class Note {
       'id': id,
       // 'title': title,
       'content': content,
-      'date_created': epochFromDate(timeCreated),
+      //'date_created': epochFromDate(timeCreated),
 /*       'date_last_edited': epochFromDate(lastEdited),
       'note_color': colorNote.toString(),
       'is_archived': archived */
@@ -321,7 +276,7 @@ final String columnId = '_id';
 final String columnContent = "content";
 final String columnDateMade = "date_created";
 
-class DatabaseHelper {
+/* class DatabaseHelper {
   static final _databaseName = "AllNotes.db";
   static final _databaseVersion = 1;
 
@@ -393,7 +348,7 @@ class DatabaseHelper {
       }
     }
   }
-}
+} */
 
 class NotePage extends StatefulWidget {
   //final noteView;
@@ -403,48 +358,53 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
-  var notesDB = DatabaseHelper._privateConstructor();
+  List<String> allNotes = []; //List();
+  TextEditingController _contentControl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Consumer<NoteProvider>(
-          builder: (context, NoteProvider data, child) {
-            return data.getNotes.length != 0
-                ? ListView.builder(
-                    itemCount: data.getNotes.length,
-                    itemBuilder: (context, index) {
-                      return CardList(data.getNotes[index], index);
-                    },
-                  )
-                : GestureDetector(
-                    onTap: () {
-                      showAlertDialog(context);
-                    },
-                    child: Center(
-                        child: Text(
-                      "ADD SOME NOTES NOW",
-                      style: TextStyle(
-                        color: Colors.white,
+        body: allNotes == null
+            ? Container()
+            : ListView.builder(
+                itemCount: allNotes.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  return Dismissible(
+                      key: Key(allNotes[index]),
+                      child: Card(
+                          child: ListTile(
+                        title: Text("" + allNotes[index] + ""),
+                      )));
+                }),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      title: Text("Add note"),
+                      content: TextField(
+                        onChanged: (String value) {
+                          notes = value;
+                        },
                       ),
-                    )));
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showAlertDialog(context);
-        },
-        backgroundColor: Colors.white,
-        child: Icon(Icons.add, color: Colors.black),
-      ),
-    );
+                      actions: <Widget>[
+                        TextButton(
+                            onPressed: () {
+                              setState(() {
+                                allNotes.add(notes);
+                              });
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Add note"))
+                      ]);
+                }),
+            tooltip: 'Add Item',
+            child: Icon(Icons.add)));
   }
 }
 
-showAlertDialog(BuildContext context) {
+/* showAlertDialog(BuildContext context) {
   TextEditingController _contentControl = TextEditingController();
 
   Widget okButton = TextButton(
@@ -473,13 +433,14 @@ showAlertDialog(BuildContext context) {
       builder: (BuildContext context) {
         return alert;
       });
-}
+} */
 
-class NoteScreen extends StatelessWidget {
+/* class NoteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => NoteProvider(), child: NotePage());
+    return SingleChildScrollView(
+        child: ChangeNotifierProvider(
+            create: (context) => NoteProvider(), child: NotePage()));
   }
 }
 
@@ -489,8 +450,8 @@ class CardList extends StatelessWidget {
   CardList(this.notes, this.index);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
+    return SingleChildScrollView(
+      //padding: const EdgeInsets.all(2.0),
       child: Slidable(
         actionPane: SlidableDrawerActionPane(),
         actionExtentRatio: 0.25,
@@ -544,7 +505,7 @@ class NoteProvider extends ChangeNotifier {
     _notes.removeAt(index);
     notifyListeners();
   }
-}
+} */
 
 /* class TodoList extends StatefulWidget {
   @override
@@ -579,10 +540,10 @@ class _TodoListState extends State<TodoList> {
   // Generate list of item widgets
   Widget _buildTodoItem(String title) {
     return ListTile(title: Text(title));
-  }
+  } */
 
-  // Generate a single item widget
-  Future<AlertDialog> _displayDialog(BuildContext context) async {
+// Generate a single item widget
+/*   Future<AlertDialog> _displayDialog(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -609,16 +570,16 @@ class _TodoListState extends State<TodoList> {
             ],
           );
         });
-  }
+  } */
 
-  List<Widget> _getItems() {
+/*   List<Widget> _getItems() {
     final List<Widget> _todoWidgets = <Widget>[];
     for (String title in _todoList) {
       _todoWidgets.add(_buildTodoItem(title));
     }
     return _todoWidgets;
-  }
-} */
+  } */
+//}
 
 //-------------requests---------------
 
@@ -626,18 +587,6 @@ Future<String> getDescription(String exercise) async {
   try {
     Response response = await Dio().get(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseDescription?name=$exercise",
-    );
-    return response.data.toString();
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
-
-Future<String> getText(String day, String text) async {
-  try {
-    Response response = await Dio().get(
-      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseLearnDescription?name=$text&day=$day",
     );
     return response.data.toString();
   } catch (e) {
