@@ -87,6 +87,7 @@ class _PersonalHomePage extends State<PersonalHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var day = widget.requests["programDay"]["mental"];
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -101,33 +102,9 @@ class _PersonalHomePage extends State<PersonalHomePage> {
             ElevatedButton(onPressed: null, child: const Text("Full Program"))
           ],
         ),
-        titleSection,
-        Row(children: [
-          FutureBuilder<String>(
-              future: getDescription("exercise1"),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Flexible(
-                      child: Text(snapshot.data,
-                          style: TextStyle(fontWeight: FontWeight.bold)));
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return CircularProgressIndicator();
-              }),
-        ]),
-        //divider used to avoid overlapping with navigation bar
-        const Divider(
-          height: 80,
-          thickness: 5,
-          indent: 20,
-          endIndent: 20,
-        ),
-      ],
-    ))));
-  }
-
-  Widget titleSection = Container(
+        //titleSection,
+        //get title
+        Container(
     padding: const EdgeInsets.all(32),
     child: Row(
       children: [
@@ -157,10 +134,36 @@ class _PersonalHomePage extends State<PersonalHomePage> {
           Icons.wb_sunny_rounded,
           color: Colors.red[500],
         ),
-        Text('Day 2'),
+        Text(day),
       ],
     ),
-  );
+  ),
+        //get desctriptions.
+        Row(children: [
+          FutureBuilder<String>(
+              future: getDescription("exercise1"),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Flexible(
+                      child: Text(snapshot.data,
+                          style: TextStyle(fontWeight: FontWeight.bold)));
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                return CircularProgressIndicator();
+              }),
+        ]),
+        //divider used to avoid overlapping with navigation bar
+        const Divider(
+          height: 80,
+          thickness: 5,
+          indent: 20,
+          endIndent: 20,
+        ),
+      ],
+    ))));
+  }
+
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
@@ -591,3 +594,4 @@ Future<String> getDescription(String exercise) async {
     return null;
   }
 }
+
