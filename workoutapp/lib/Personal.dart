@@ -129,19 +129,23 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                         color: Colors.grey[500],
                       ),
                     ),*/
-                    FutureBuilder<String>(
-                        future: getText(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Flexible(
-                                child: Text(snapshot.data,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold)));
-                          } else if (snapshot.hasError) {
-                            return Text("${snapshot.error}");
-                          }
-                          return CircularProgressIndicator();
-                        }),
+                    Row(
+                      children: [
+                        FutureBuilder<String>(
+                            future: getText("1", "1MentalHeader"),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Flexible(
+                                    child: Text(snapshot.data,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)));
+                              } else if (snapshot.hasError) {
+                                return Text("${snapshot.error}");
+                              }
+                              return CircularProgressIndicator();
+                            }),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -156,7 +160,7 @@ class _PersonalHomePage extends State<PersonalHomePage> {
         //get desctriptions.
         Row(children: [
           FutureBuilder<String>(
-              future: getDescription("exercise1"),
+              future: getText("1", "1MentalDescription"),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Flexible(
@@ -630,10 +634,10 @@ Future<String> getDescription(String exercise) async {
   }
 }
 
-Future<String> getText() async {
+Future<String> getText(String day, String text) async {
   try {
     Response response = await Dio().get(
-      "https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FMental%2F1MentalHeader.txt?alt=media&token=719d36d1-a77a-42e8-b681-9072e750b31e",
+      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseLearnDescription?name=$text&day=$day",
     );
     return response.data.toString();
   } catch (e) {
