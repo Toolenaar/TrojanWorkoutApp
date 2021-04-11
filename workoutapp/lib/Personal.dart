@@ -102,42 +102,41 @@ class _PersonalHomePage extends State<PersonalHomePage> {
             ElevatedButton(onPressed: null, child: const Text("Full Program"))
           ],
         ),
-        //titleSection,
         //get title
         Container(
-    padding: const EdgeInsets.all(32),
-    child: Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.all(32),
+          child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  'Learn',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        'Learn',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Learn Day1 title',
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                'Learn Day1 title',
-                style: TextStyle(
-                  color: Colors.grey[500],
-                ),
+              Icon(
+                Icons.wb_sunny_rounded,
+                color: Colors.red[500],
               ),
+              Text(day),
             ],
           ),
         ),
-        Icon(
-          Icons.wb_sunny_rounded,
-          color: Colors.red[500],
-        ),
-        Text(day),
-      ],
-    ),
-  ),
         //get desctriptions.
         Row(children: [
           FutureBuilder<String>(
@@ -163,7 +162,6 @@ class _PersonalHomePage extends State<PersonalHomePage> {
       ],
     ))));
   }
-
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
@@ -594,4 +592,3 @@ Future<String> getDescription(String exercise) async {
     return null;
   }
 }
-
