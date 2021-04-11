@@ -123,12 +123,25 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                         ),
                       ),
                     ),
-                    Text(
-                      'Learn Day1 title',
+                    /*Text(
+                      "",
                       style: TextStyle(
                         color: Colors.grey[500],
                       ),
-                    ),
+                    ),*/
+                    FutureBuilder<String>(
+                        future: getText(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Flexible(
+                                child: Text(snapshot.data,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold)));
+                          } else if (snapshot.hasError) {
+                            return Text("${snapshot.error}");
+                          }
+                          return CircularProgressIndicator();
+                        }),
                   ],
                 ),
               ),
@@ -609,6 +622,18 @@ Future<String> getDescription(String exercise) async {
   try {
     Response response = await Dio().get(
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/exerciseDescription?name=$exercise",
+    );
+    return response.data.toString();
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+Future<String> getText() async {
+  try {
+    Response response = await Dio().get(
+      "https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FMental%2F1MentalHeader.txt?alt=media&token=719d36d1-a77a-42e8-b681-9072e750b31e",
     );
     return response.data.toString();
   } catch (e) {
