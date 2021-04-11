@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:workoutapp/library.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 //----------widgets----------------
 
@@ -57,7 +57,14 @@ class WorkoutsHomePage extends StatelessWidget {
     return Column(
         children: [
           ElevatedButton(
-              onPressed: () => {},
+              onPressed: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PhysicalProgramPage()
+                    )
+                )
+              },
               child: const Text("Physical Program")
           ),
           ElevatedButton(
@@ -295,6 +302,98 @@ class _ExercisePageState extends State<ExercisePage> {
     );
   }
 }
+
+class PhysicalProgramPage extends StatefulWidget {
+  @override
+  _PhysicalProgramPageState createState() => _PhysicalProgramPageState();
+}
+
+class _PhysicalProgramPageState extends State<PhysicalProgramPage> {
+  String _playing = "Play";
+  AudioPlayer _player = AudioPlayer();
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return Stack(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: ElevatedButton(
+                  child: Text("Back"),
+                  onPressed: () {
+                    _player.stop();
+                    Navigator.pop(context);
+                  },
+                )
+              )
+            ),
+            Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                    padding: EdgeInsets.all(100),
+                    child: Text("Standing Strong Physically",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                      ),
+                    )
+                )
+            ),
+            Align(
+                alignment: Alignment.center,
+                child: Container(
+                    width: 300.0,
+                    height: 300.0,
+                    child: Image.network(
+                        "https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FPhysical%2Fbruce-lee.jpg?alt=media&token=42e32278-0472-479b-afba-f9ea534619bf")
+                )
+            ),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(150),
+                  child: ElevatedButton(
+                      child: Text(_playing),
+                      onPressed: () {
+                        if (_playing == "Play") {
+                          setState(() {
+                            _playing = "Pause";
+                            _player.play("https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FPhysical%2FStanding%20strong%20physical.m4a?alt=media&token=3986f110-596c-4623-bb20-c925372c9106");
+                          });
+                        } else {
+                          setState(() {
+                            _playing = "Play";
+                            _player.pause();
+                          });
+                        }
+                      }
+                  ),
+                )
+            )
+
+            // Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: Padding(
+            //         padding: EdgeInsets.all(150),
+            //         child: Text("audio",
+            //           style: TextStyle(
+            //               fontWeight: FontWeight.bold,
+            //             color: Colors.white
+            //           ),
+            //         )
+            //     )
+            // )
+          ]
+      );
+    } catch(e) {
+      print("err");
+    }
+  }
+}
+
 
 class QuestionsPage extends StatefulWidget {
   final Function getQuestions;
