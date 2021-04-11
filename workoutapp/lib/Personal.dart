@@ -19,6 +19,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 final exercises = List<int>.generate(6, (i) => i);
 
@@ -70,6 +71,8 @@ class PersonalHomePage extends StatefulWidget {
 }
 
 class _PersonalHomePage extends State<PersonalHomePage> {
+  String _playing = "Play";
+  AudioPlayer _player = AudioPlayer();
   String content = '';
   fetchContentDescription() async {
     String responseText;
@@ -152,6 +155,27 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                 return CircularProgressIndicator();
               }),
         ]),
+        Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: ElevatedButton(
+                  child: Text(_playing),
+                  onPressed: () {
+                    if (_playing == "Play") {
+                      setState(() {
+                        _playing = "Pause";
+                        _player.play(
+                            "https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FMental%2FWhat%E2%80%99s%20standing%20strong%20mentally.m4a?alt=media&token=38fb7332-2c67-4e49-aab0-755a19685c1f");
+                      });
+                    } else {
+                      setState(() {
+                        _playing = "Play";
+                        _player.pause();
+                      });
+                    }
+                  }),
+            )),
         //divider used to avoid overlapping with navigation bar
         const Divider(
           height: 80,
