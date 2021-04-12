@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>920041749156-aefer6nio6gfmof07e79u1h6u3ml9r3j.apps.googleusercontent.com</string>
+	<string>890185763269-kcf1ev0fk25frm4591q7qjqqqjd6b8s3.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.920041749156-aefer6nio6gfmof07e79u1h6u3ml9r3j</string>
+	<string>com.googleusercontent.apps.890185763269-kcf1ev0fk25frm4591q7qjqqqjd6b8s3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>890185763269-ar9i1uj93qkvemg1itaqotg2f5950bv1.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA28vFZhSb_E4DC2ISOt9ovskLeVzzSn1M</string>
+	<string>AIzaSyBJh2zvVt3xxVwhUGnnsKqUOFv4Px56TKE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>920041749156</string>
+	<string>890185763269</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.workoutapp</string>
 	<key>PROJECT_ID</key>
-	<string>trojan-workout</string>
+	<string>trojan-tcd-dev</string>
 	<key>STORAGE_BUCKET</key>
-	<string>trojan-workout.appspot.com</string>
+	<string>trojan-tcd-dev.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:920041749156:ios:ac63f2d5b581e54524c431</string>
+	<string>1:890185763269:ios:a969048243c585baa023ac</string>
 </dict>
 </plist>

@@ -3,13 +3,17 @@ import 'dart:collection';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:workoutapp/auth/baseAuth.dart';
+import 'package:workoutapp/auth/login/rootPage.dart';
 import 'package:workoutapp/workouts.dart';
 import 'package:workoutapp/personal.dart';
 import 'package:workoutapp/community.dart';
 import 'package:workoutapp/library.dart';
+import 'package:workoutapp/settings.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
@@ -74,10 +78,12 @@ class WorkoutApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return CupertinoApp(
-              home: new HomeScreen(snapshot.data),
+               home: new RootPage(
+               auth: new Auth(),
+             ),
               localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-                DefaultMaterialLocalizations.delegate,
-                DefaultWidgetsLocalizations.delegate,
+              DefaultMaterialLocalizations.delegate,
+              DefaultWidgetsLocalizations.delegate,
               ],
             );
           }
@@ -89,22 +95,32 @@ class WorkoutApp extends StatelessWidget {
               child: CircularProgressIndicator()
           );
         }
+
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  final requests;
-  const HomeScreen(this.requests, {
-    Key key,
-  }) : super(key: key);
+  HomeScreen({Key key, this.auth, this.userId, this.logoutCallback, this.requests})
+      : super(key: key);
 
+  final BaseAuth auth;
+  final VoidCallback logoutCallback;
+  final String userId;
+  final requests;
+  
   @override
   _HomeScreenState createState() => _HomeScreenState();
 
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
@@ -128,6 +144,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(FontAwesomeIcons.book),
             title: Text('Library'),
           ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), title: Text('Settings'))
         ],
       ),
       tabBuilder: (context, index) {
@@ -146,10 +164,17 @@ class _HomeScreenState extends State<HomeScreen> {
             navigatorKey: thirdTabNavKey,
             builder: (BuildContext context) => Community(),
           );
-        } else {
+        } else if (index == 3) {
           return CupertinoTabView(
             navigatorKey: fourthTabNavKey,
             builder: (BuildContext context) => Library(widget.requests),
+          );
+        } else {
+          return CupertinoTabView(
+            navigatorKey: thirdTabNavKey,
+            builder: (BuildContext context) {
+              return Settings(logoutCallback: widget.logoutCallback);
+            },
           );
         }
       },

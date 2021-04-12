@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 //import 'dart:html';
 import 'dart:convert' show utf8;
 import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -50,6 +52,7 @@ class _PersonalState extends State<Personal> {
 
   @override
   Widget build(BuildContext context) {
+    print(FirebaseAuth.instance.currentUser.getIdToken());
     return MaterialApp(
       routes: {
         '/': (_) => PersonalHomePage(exercises, widget.requests),
