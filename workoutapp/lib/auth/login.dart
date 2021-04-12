@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 30),
                   child: Text(
-                    'Sign In',
+                    'Sign Up',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 26, color: Colors.red),
                   ),
@@ -323,7 +323,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 50),
-                child: Text('Sign In with Email',
+                child: Text('Sign Up with Email',
                     style: TextStyle(fontSize: 20, color: Colors.grey[700])),
               )
             ],
@@ -456,7 +456,7 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: new BorderRadius.circular(10.0),
           ),
           child: new Text(
-            'Sign In',
+            'Sign Up',
             style: new TextStyle(fontSize: 20.0, color: Colors.white),
           ),
           onPressed: () async {
@@ -485,7 +485,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
-              Text("sign up!",
+              Text("Sign Up!",
                   style: new TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w300,
@@ -661,7 +661,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 50),
                 child: Text(
-                  'sign in with Google',
+                  'Sign In with Google',
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.grey[700],
