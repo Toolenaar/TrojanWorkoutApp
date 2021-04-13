@@ -299,13 +299,15 @@ class _PhysicalProgramPageState extends State<PhysicalProgramPage> {
             alignment: Alignment.topLeft,
             child: Padding(
                 padding: EdgeInsets.all(20),
-                child: ElevatedButton(
-                  child: Text("Back"),
-                  onPressed: () {
-                    _player.stop();
-                    Navigator.pop(context);
-                  },
-                ))),
+                child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: ElevatedButton(
+                      child: Text("Back"),
+                      onPressed: () {
+                        _player.stop();
+                        Navigator.pop(context);
+                      },
+                    )))),
         Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -327,7 +329,7 @@ class _PhysicalProgramPageState extends State<PhysicalProgramPage> {
             child: Padding(
               padding: EdgeInsets.all(150),
               child: ElevatedButton(
-                  child: Text(_playing),
+                  child: FittedBox(fit: BoxFit.fitWidth, child: Text(_playing)),
                   onPressed: () {
                     if (_playing == "Play") {
                       setState(() {

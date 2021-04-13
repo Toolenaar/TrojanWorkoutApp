@@ -20,6 +20,7 @@ final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> thirdTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> fourthTabNavKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> fifthTabNavKey = GlobalKey<NavigatorState>();
 FirebaseAnalytics analytics = FirebaseAnalytics();
 
 void main() async {
@@ -45,7 +46,8 @@ Future<HashMap> initRequests() async {
       "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/date?user=$userId",
     );
     List days = response.data.split(",");
-    out.putIfAbsent("programDay", () => {"physical":days[0], "mental":days[1]});
+    out.putIfAbsent(
+        "programDay", () => {"physical": days[0], "mental": days[1]});
 
     // get list of workouts and their exercises
     // format: workout1:ex1,ex2;workout2:ex1,ex2;etc
@@ -78,41 +80,36 @@ class WorkoutApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return CupertinoApp(
-               home: new RootPage(
-               auth: new Auth(),
-               requests: snapshot.data,
-             ),
+              home: new RootPage(
+                auth: new Auth(),
+                requests: snapshot.data,
+              ),
               localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-              DefaultMaterialLocalizations.delegate,
-              DefaultWidgetsLocalizations.delegate,
+                DefaultMaterialLocalizations.delegate,
+                DefaultWidgetsLocalizations.delegate,
               ],
             );
-          }
-          else if (snapshot.hasError) {
+          } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
           return Align(
-              alignment: Alignment.center,
-              child: CircularProgressIndicator()
-          );
-        }
-
-    );
+              alignment: Alignment.center, child: CircularProgressIndicator());
+        });
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, this.auth, this.userId, this.logoutCallback, this.requests})
+  HomeScreen(
+      {Key key, this.auth, this.userId, this.logoutCallback, this.requests})
       : super(key: key);
 
   final BaseAuth auth;
   final VoidCallback logoutCallback;
   final String userId;
   final requests;
-  
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
-
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -125,7 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
-    
       tabBar: CupertinoTabBar(
         activeColor: Color(0xFFF5CEB8),
         items: [
@@ -172,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         } else {
           return CupertinoTabView(
-            navigatorKey: thirdTabNavKey,
+            navigatorKey: fifthTabNavKey,
             builder: (BuildContext context) {
               return Settings(logoutCallback: widget.logoutCallback);
             },
