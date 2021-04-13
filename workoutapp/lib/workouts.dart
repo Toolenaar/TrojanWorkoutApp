@@ -55,7 +55,9 @@ class WorkoutsHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
@@ -73,13 +75,16 @@ class WorkoutsHomePage extends StatelessWidget {
         shrinkWrap: true,
         itemCount: workouts.length,
         itemBuilder: (BuildContext context, int index) {
-          return ElevatedButton(
-              child: Text(requests["workouts"].keys.toList()[index]),
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ExercisePage(
-                          requests["workouts"].values.toList()[index], 0))));
+          return Padding(
+              padding: EdgeInsets.fromLTRB(width / 10, 0, width / 10, 0),
+              child: ElevatedButton(
+                  child: Text(requests["workouts"].keys.toList()[index]),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ExercisePage(
+                              requests["workouts"].values.toList()[index],
+                              0)))));
         },
       ),
       // ListView.builder( // list of exercises in workout

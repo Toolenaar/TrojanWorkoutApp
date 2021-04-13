@@ -458,8 +458,8 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: new BorderRadius.circular(10.0),
           ),
           child: new Text(
-            'Sign Up',
-            style: new TextStyle(fontSize: 20.0, color: Colors.white),
+            'Sign In',
+            style: new TextStyle(fontSize: 20.0, color: Colors.black),
           ),
           onPressed: () async {
             signInUser(
@@ -502,33 +502,35 @@ class _LoginPageState extends State<LoginPage> {
   Widget showForgotPasswordButton() {
     return Padding(
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-        child: new FlatButton(
-          child: Row(
-            children: [
-              Text(
-                "Forgot Password? ",
-                style: new TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.grey),
-                textAlign: TextAlign.center,
+        child: FittedBox(
+            fit: BoxFit.fitWidth,
+            child: new FlatButton(
+              child: Row(
+                children: [
+                  Text(
+                    "Forgot Password? ",
+                    style: new TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text("Send Reset Email",
+                      style: new TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w300,
+                      )),
+                ],
               ),
-              Text("Send Reset Email",
-                  style: new TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                  )),
-            ],
-          ),
-          onPressed: () async {
-            resetPassword(
-              _email,
-              _signInKey,
-            );
-            Toast.show("sent reset password email", context,
-                duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-          },
-        ));
+              onPressed: () async {
+                resetPassword(
+                  _email,
+                  _signInKey,
+                );
+                Toast.show("sent reset password email", context,
+                    duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+              },
+            )));
   }
 
   //------------------------------Sign UP-------------------------------------

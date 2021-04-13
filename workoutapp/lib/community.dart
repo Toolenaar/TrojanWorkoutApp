@@ -18,44 +18,50 @@ class Community extends StatelessWidget {
 class CommunityHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           middle: const Text('Welcome to Community!'),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CupertinoButton.filled(
-                child: Text("Mental Power Principles",
-                    style: TextStyle(
-                        fontSize: 14.0, color: CupertinoColors.white)),
-                onPressed: () => {
-                      Navigator.of(context).pushNamed("principles")
-                    }), // goes to new page displaying power principles
-            CupertinoButton.filled(
-              child: Text(
-                "Upcoming Trojan Events",
-                style: TextStyle(fontSize: 14.0, color: CupertinoColors.white),
-              ),
-              onPressed: launchURL,
-            ), // goes to events on the external Trojan site
-            CupertinoButton.filled(
-              child: Text("Trojan Workout Website \nMartijn Bos",
-                  textAlign: TextAlign.center,
-                  style:
-                      TextStyle(fontSize: 14.0, color: CupertinoColors.white)),
-              onPressed: _launchURL,
-            ), // goes to homepage on the external Trojan site
-            CupertinoButton.filled(
-                child: Text("Testimonials",
-                    style: TextStyle(
-                        fontSize: 14.0, color: CupertinoColors.white)),
-                onPressed: () => {
-                      Navigator.of(context).pushNamed("testimonials")
-                    }), // goes to new page with list of reviews
-          ],
-        ));
+        child: Padding(
+            padding: EdgeInsets.fromLTRB(width / 10, 0, width / 10, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                CupertinoButton.filled(
+                    child: Text("Mental Power Principles",
+                        style: TextStyle(
+                            fontSize: 14.0, color: CupertinoColors.white)),
+                    onPressed: () => {
+                          Navigator.of(context).pushNamed("principles")
+                        }), // goes to new page displaying power principles
+                CupertinoButton.filled(
+                  child: Text(
+                    "Upcoming Trojan Events",
+                    style:
+                        TextStyle(fontSize: 14.0, color: CupertinoColors.white),
+                  ),
+                  onPressed: launchURL,
+                ), // goes to events on the external Trojan site
+                CupertinoButton.filled(
+                  child: Text("Trojan Workout Website \nMartijn Bos",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14.0, color: CupertinoColors.white)),
+                  onPressed: _launchURL,
+                ), // goes to homepage on the external Trojan site
+                CupertinoButton.filled(
+                    child: Text("Testimonials",
+                        style: TextStyle(
+                            fontSize: 14.0, color: CupertinoColors.white)),
+                    onPressed: () => {
+                          Navigator.of(context).pushNamed("testimonials")
+                        }), // goes to new page with list of reviews
+              ],
+            )));
   }
 }
 

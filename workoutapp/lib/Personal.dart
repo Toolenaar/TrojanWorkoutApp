@@ -28,9 +28,6 @@ final exercises = List<int>.generate(6, (i) => i);
 Note theNote;
 String notes = "";
 
-
-
-
 //Main class
 class Personal extends StatefulWidget {
   final exercises = List<int>.generate(6, (i) => i); // today's exercises data
@@ -96,6 +93,9 @@ class _PersonalHomePage extends State<PersonalHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     var day = widget.requests["programDay"]["mental"];
     return Scaffold(
         body: SafeArea(
@@ -132,7 +132,7 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                     Row(
                       children: [
                         FutureBuilder<String>(
-                            future: getText(day, day +"MentalHeader"),
+                            future: getText(day, day + "MentalHeader"),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return Flexible(
@@ -142,7 +142,7 @@ class _PersonalHomePage extends State<PersonalHomePage> {
                               } else if (snapshot.hasError) {
                                 return Text("${snapshot.error}");
                               }
-                              return CircularProgressIndicator();
+                              return Center(child: CircularProgressIndicator());
                             }),
                       ],
                     )
@@ -160,16 +160,19 @@ class _PersonalHomePage extends State<PersonalHomePage> {
         //get desctriptions.
         Row(children: [
           FutureBuilder<String>(
-              future: getText(day, day+"MentalDescription"),
+              future: getText(day, day + "MentalDescription"),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Flexible(
-                      child: Text(snapshot.data,
-                          style: TextStyle(fontWeight: FontWeight.bold)));
+                      child: Padding(
+                          padding:
+                              EdgeInsets.fromLTRB(width / 15, 0, width / 15, 0),
+                          child: Text(snapshot.data,
+                              style: TextStyle(fontWeight: FontWeight.bold))));
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               }),
         ]),
         Align(

@@ -42,7 +42,7 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 25),
                 child: Text(
-                  "what's your name?",
+                  "What's your name?",
                   style: TextStyle(
                     fontSize: 26,
                   ),
@@ -100,7 +100,7 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
                                 activeColor: Colors.blue[700],
                               ),
                               Text(
-                                "i agree to the privacy policy",
+                                "I agree to the privacy policy.",
                                 style: TextStyle(
                                   fontSize: 16,
                                 ),
@@ -108,7 +108,7 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
                             ]),
                           ),
                           Center(
-                            child: FlatButton(
+                            child: MaterialButton(
                               onPressed: () async {
                                 await updateUserName(userName);
                                 if (FirebaseAuth
@@ -121,13 +121,9 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
                                 // Validate returns true if the form is valid, or false
                                 // otherwise.
                                 if (_userNameKey.currentState.validate()) {
-                                  // If the form is valid, display a Snackbar.
-//                              Scaffold.of(context)
-//                                  .showSnackBar(
-
                                   snackBar = SnackBar(
                                     content: Text(
-                                      'nice to meet you, '
+                                      'Nice to meet you, '
                                       '${FirebaseAuth.instance.currentUser.displayName}'
                                       '',
                                       style: TextStyle(
@@ -143,17 +139,14 @@ class _askUserForNamePageState extends State<askUserForNamePage> {
                                     () => widget.loginCallback());
                               },
                               child: Text(
-                                'submit',
+                                'Submit',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 20,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                 ),
                               ),
-                              color: Colors.red[700],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
+                              color: Colors.blue,
                             ),
                           ),
                         ],
