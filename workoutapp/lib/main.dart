@@ -9,12 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:workoutapp/auth/baseAuth.dart';
 import 'package:workoutapp/auth/login/rootPage.dart';
+import 'package:workoutapp/portraitmixin.dart';
 import 'package:workoutapp/workouts.dart';
 import 'package:workoutapp/personal.dart';
 import 'package:workoutapp/community.dart';
 import 'package:workoutapp/library.dart';
 import 'package:workoutapp/settings.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
@@ -70,9 +72,10 @@ Future<HashMap> initRequests() async {
   }
 }
 
-class WorkoutApp extends StatelessWidget {
+class WorkoutApp extends StatelessWidget with PortraitModeMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
         future: initRequests(),
         builder: (context, snapshot) {
