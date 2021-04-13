@@ -6,10 +6,11 @@ PageController _homeController = PageController(
 );
 
 class HomeNavigation extends StatefulWidget {
-  HomeNavigation({this.userId, this.logoutCallback});
+  HomeNavigation({this.userId, this.logoutCallback, this.requests});
 
   final String userId;
   final VoidCallback logoutCallback;
+  final requests;
 
   @override
   _HomeNavigationState createState() => _HomeNavigationState();
@@ -25,6 +26,7 @@ class _HomeNavigationState extends State<HomeNavigation> {
         children: [
           HomeScreen(
             logoutCallback: widget.logoutCallback,
+            requests: widget.requests,
           )
         ],
       ),

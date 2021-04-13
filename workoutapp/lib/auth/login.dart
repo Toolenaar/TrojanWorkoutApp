@@ -11,11 +11,13 @@ import 'package:workoutapp/auth/baseAuth.dart';
 import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({this.auth, this.loginCallback, this.loginRequestName});
+  LoginPage(
+      {this.auth, this.loginCallback, this.loginRequestName, this.requests});
 
   final BaseAuth auth;
   final VoidCallback loginCallback;
   final VoidCallback loginRequestName;
+  final requests;
 
   @override
   _LoginPageState createState() => _LoginPageState();

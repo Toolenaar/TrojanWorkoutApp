@@ -80,6 +80,7 @@ class WorkoutApp extends StatelessWidget {
             return CupertinoApp(
                home: new RootPage(
                auth: new Auth(),
+               requests: snapshot.data,
              ),
               localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
               DefaultMaterialLocalizations.delegate,

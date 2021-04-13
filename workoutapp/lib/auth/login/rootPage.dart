@@ -7,9 +7,10 @@ import 'package:workoutapp/auth/usernameForm.dart';
 enum AuthStatus { NOT_DETERMINED, NOT_LOGGED_IN, LOGGED_IN, REQUESTING_NAME }
 
 class RootPage extends StatefulWidget {
-  RootPage({this.auth});
+  RootPage({this.auth, this.requests});
 
   final BaseAuth auth;
+  final requests;
 
   @override
   _RootPageState createState() => _RootPageState();
@@ -70,35 +71,39 @@ class _RootPageState extends State<RootPage> {
         return new LoginPage(
           auth: widget.auth,
           loginCallback: loginCallback,
+          requests: widget.requests,
         );
         break;
-        case AuthStatus.LOGGED_IN:
-          if (_userId.length > 0 && _userId != null) {
-            // TODO: Add Firebase Analytics successful signin here
-            return new HomeNavigation(
-              userId: _userId,
-              logoutCallback: logoutCallback,
-            );
-          } else {
-            // TODO: Add Firebase Analytics signin failure here
-            return Container(
-              child: Text('Issue with login, please contact the developer or try again.'),
-            );
-          }
-          break;
-        case AuthStatus.NOT_LOGGED_IN:
-          return new LoginPage(
-            auth: widget.auth,
-            loginCallback: loginCallback,
-            loginRequestName: loginRequestName,
+      case AuthStatus.LOGGED_IN:
+        if (_userId.length > 0 && _userId != null) {
+          // TODO: Add Firebase Analytics successful signin here
+          return new HomeNavigation(
+            userId: _userId,
+            logoutCallback: logoutCallback,
+            requests: widget.requests,
           );
-          break;
-        case AuthStatus.REQUESTING_NAME:
-          return new askUserForNamePage(
-            auth: widget.auth,
-            loginCallback: loginCallback,
+        } else {
+          // TODO: Add Firebase Analytics signin failure here
+          return Container(
+            child: Text(
+                'Issue with login, please contact the developer or try again.'),
           );
-          break;
+        }
+        break;
+      case AuthStatus.NOT_LOGGED_IN:
+        return new LoginPage(
+          auth: widget.auth,
+          loginCallback: loginCallback,
+          loginRequestName: loginRequestName,
+          requests: widget.requests,
+        );
+        break;
+      case AuthStatus.REQUESTING_NAME:
+        return new askUserForNamePage(
+          auth: widget.auth,
+          loginCallback: loginCallback,
+        );
+        break;
     }
   }
 }
