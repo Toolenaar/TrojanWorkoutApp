@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
           print(e.toString());
           setState(() {
             _isLoading = false;
-            _errorMessage = e.message;
+            _errorMessage = e?.message;
             _formKey.currentState.reset();
           });
         }
