@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           _isLoading = false;
         });
-        if (userId.length > 0 && userId != null && _isLoginForm) {
+        if (userId != null && userId.length > 0 && _isLoginForm) {
           final User user = _auth.currentUser;
           assert(user.uid == userId);
           Navigator.pop(context);
