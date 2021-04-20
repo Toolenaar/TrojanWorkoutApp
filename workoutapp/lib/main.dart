@@ -17,7 +17,6 @@ import 'package:workoutapp/library.dart';
 import 'package:workoutapp/settings.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 final GlobalKey<NavigatorState> firstTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> thirdTabNavKey = GlobalKey<NavigatorState>();
@@ -60,8 +59,9 @@ Future<HashMap> initRequests() async {
     HashMap workouts = new HashMap();
     for (var elem in responses) {
       List workout = elem.split(":");
-      List exercises = workout[1].split(",");
-      workouts.putIfAbsent(workout[0], () => exercises);
+      // changed from element 1 to 0, i think this was a typo and was causing a RangeError
+      List exercises = workout.first.split(",");
+      workouts.putIfAbsent(workout.first, () => exercises);
     }
     out.putIfAbsent("workouts", () => workouts);
 
