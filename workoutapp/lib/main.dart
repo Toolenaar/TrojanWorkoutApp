@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -34,6 +36,7 @@ void main() async {
 // make initial api requests before app starts
 Future<HashMap> initRequests() async {
   HashMap out = new HashMap();
+  if (FirebaseAuth.instance.currentUser == null) return null;
   try {
     // get exercise names todo could get pairs of img-description instead?
     Response response = await Dio().get(
@@ -52,9 +55,15 @@ Future<HashMap> initRequests() async {
 
     // get list of workouts and their exercises
     // format: workout1:ex1,ex2;workout2:ex1,ex2;etc
-    response = await Dio().get(
-      "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/workouts",
-    );
+    Dio dio = new Dio();
+    String token = await FirebaseAuth.instance.currentUser.getIdToken();
+    log(token);
+
+    response = await dio.get(
+        "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/workouts",
+        options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
+    log(response.data.toString());
     List responses = response.data.split(";");
     HashMap workouts = new HashMap();
     for (var elem in responses) {

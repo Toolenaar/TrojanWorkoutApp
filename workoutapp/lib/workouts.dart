@@ -58,6 +58,7 @@ class WorkoutsHomePage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final width = size.width;
     final height = size.height;
+    
     return Scaffold(
         body: SafeArea(
             child: Column(children: [
