@@ -54,7 +54,6 @@ Future<HashMap> initRequests() async {
         "programDay", () => {"physical": days[0], "mental": days[1]});
 
     // get list of workouts and their exercises
-    // format: workout1:ex1,ex2;workout2:ex1,ex2;etc
     Dio dio = new Dio();
     String token = await FirebaseAuth.instance.currentUser.getIdToken();
     log(token);
@@ -63,16 +62,7 @@ Future<HashMap> initRequests() async {
         "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/workouts",
         options: Options(
             headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
-    log(response.data.toString());
-    List responses = response.data.split(";");
-    HashMap workouts = new HashMap();
-    for (var elem in responses) {
-      List workout = elem.split(":");
-      // changed from element 1 to 0, i think this was a typo and was causing a RangeError
-      List exercises = workout.first.split(",");
-      workouts.putIfAbsent(workout.first, () => exercises);
-    }
-    out.putIfAbsent("workouts", () => workouts);
+    out.putIfAbsent("workouts", () => response.data);
 
     // other...
 
