@@ -53,7 +53,8 @@ class _PersonalState extends State<Personal> {
     return MaterialApp(
       routes: {
         '/': (_) => PersonalHomePage(exercises, widget.requests),
-        'days': (_) => FullProgramPage()
+        // chaged to note page from full program page which is removed
+        'days': (_) => NotePage()
       },
     );
   }
@@ -213,41 +214,6 @@ class _PersonalHomePage extends State<PersonalHomePage> {
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/config.json');
-  }
-}
-
-//program page with each day
-class FullProgramPage extends StatefulWidget {
-  @override
-  _FullProgramPage createState() => _FullProgramPage();
-}
-
-class _FullProgramPage extends State<FullProgramPage> {
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context)
-        .size; //this gives us total height and width of our device
-    return NotePage();
-    /*
-    SingleChildScrollView(
-        child: Column(
-      children: [
-        /*Container(
-          constraints: BoxConstraints.expand(height: size.height * .05),
-          color: Colors.grey,
-          child: Text('',
-              style: TextStyle(
-                //fontSize: 10.0,
-                fontWeight: FontWeight.normal,
-              )),
-        ),*/
-
-        //SizedBox(height: 400, child: NotePage()),
-        //TodoList(),
-        /*ElevatedButton(
-            child: const Text('Back'),
-            onPressed: () => Navigator.pushNamed(context, '/'))*/
-      ],
-    ));*/
   }
 }
 
