@@ -54,7 +54,7 @@ class _PersonalState extends State<Personal> {
       routes: {
         '/': (_) => PersonalHomePage(exercises, widget.requests),
         // chaged to note page from full program page which is removed
-        'days': (_) => NotePage()
+        'days': (_) => NotePage(widget.requests),
       },
     );
   }
@@ -294,93 +294,26 @@ final String columnId = '_id';
 final String columnContent = "content";
 final String columnDateMade = "date_created";
 
-/* class DatabaseHelper {
-  static final _databaseName = "AllNotes.db";
-  static final _databaseVersion = 1;
-
-  DatabaseHelper._privateConstructor();
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
-
-  static Database _database;
-  Future<Database> get database async {
-    if (_database != null) return _database;
-    _database = await _initDatabase();
-    return _database;
-  }
-
-  _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    // Open the database. Can also add an onUpdate callback parameter.
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
-  }
-
-  Future _onCreate(Database db, int verison) async {
-    await db.execute('''
-        CREATE TABLE $tableNotes (
-          $columnId INTEGER PRIMARY KEY,
-          $columnContent TEXT NOT NULL,
-          $columnDateMade TEXT NOT NULL
-        )
-      ''');
-  }
-
-  Future<int> insert(Note note) async {
-    Database db = await database;
-    int id = await db.insert(tableNotes, note.toMap(false));
-    return id;
-  }
-
-/*   Future<String> queryNote(int id) async {
-    Database db = await database;
-    List<Map> maps = await db.query(tableNotes,
-        columns: [columnId, columnContent, columnDateMade],
-        where: '$columnId = ?',
-        whereArgs: [id]);
-    if (maps.length > 0) {
-      return Note
-    }
-  } */
-
-  Future<bool> archiveNote(Note note) async {
-    if (note.id != -1) {
-      final Database db = await database;
-
-      int idToUpdate = note.id;
-
-      db.update("notes", note.toMap(true),
-          where: "id = ?", whereArgs: [idToUpdate]);
-    }
-  }
-
-  Future<bool> deleteNote(Note note) async {
-    if (note.id != -1) {
-      final Database db = await database;
-      try {
-        await db.delete("notes", where: "id = ?", whereArgs: [note.id]);
-        return true;
-      } catch (Error) {
-        print("Error deleting ${note.id}: ${Error.toString()}");
-        return false;
-      }
-    }
-  }
-} */
 
 class NotePage extends StatefulWidget {
-  //final noteView;
+
+  final requests;
+  const NotePage(
+    this.requests, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _NotePageState createState() => _NotePageState();
 }
 
 class _NotePageState extends State<NotePage> {
-  List<String> allNotes = []; //List();
+  
   TextEditingController _contentControl = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
+    List<String> allNotes = widget.requests["notes"].values.toList(); //List();
     var size = MediaQuery.of(context).size;
     var height = size.height;
     return Scaffold(

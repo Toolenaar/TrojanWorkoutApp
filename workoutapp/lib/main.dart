@@ -64,6 +64,12 @@ Future<HashMap> initRequests() async {
             headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}) */);
     out.putIfAbsent("workouts", () => response.data);
 
+    response = await dio.get(
+        "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/notes",
+        /* options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}) */);
+    out.putIfAbsent("notes", () => response.data);
+
     // other...
 
     return out;
