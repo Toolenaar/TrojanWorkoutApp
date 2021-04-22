@@ -98,113 +98,117 @@ class _PersonalHomePage extends State<PersonalHomePage> {
     final height = size.height;
     var day = widget.requests["programDay"]["mental"];
     return Scaffold(
-        body: SafeArea(
-            child: SingleChildScrollView(
-                child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-                child: const Text("Notes"),
-                onPressed: () => Navigator.pushNamed(context, 'days')),
+        appBar: AppBar(
+          title: Container(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              'Learn',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  child: const Text("Notes"),
+                  onPressed: () => Navigator.pushNamed(context, 'days')),
+            ),
             ElevatedButton(onPressed: null, child: const Text("Full Program"))
           ],
         ),
-        //get title
-        Container(
-          padding: const EdgeInsets.all(32),
-          child: Row(
-            children: [
-              Expanded(
+        body: SafeArea(
+            child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        'Learn',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Row(
+          children: [
+            //get title
+            Container(
+              padding: const EdgeInsets.all(32),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FutureBuilder<String>(
-                            future: getText(day, day + "MentalHeader"),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return Flexible(
-                                    child: Text(snapshot.data,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)));
-                              } else if (snapshot.hasError) {
-                                return Text("${snapshot.error}");
-                              }
-                              return Center(child: CircularProgressIndicator());
-                            }),
+                        Row(
+                          children: [
+                            FutureBuilder<String>(
+                                future: getText(day, day + "MentalHeader"),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Flexible(
+                                        child: Text(snapshot.data,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)));
+                                  } else if (snapshot.hasError) {
+                                    return Text("${snapshot.error}");
+                                  }
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }),
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.wb_sunny_rounded,
+                    color: Colors.red[500],
+                  ),
+                  Text(day),
+                ],
               ),
-              Icon(
-                Icons.wb_sunny_rounded,
-                color: Colors.red[500],
-              ),
-              Text(day),
-            ],
-          ),
-        ),
-        //get desctriptions.
-        Row(children: [
-          FutureBuilder<String>(
-              future: getText(day, day + "MentalDescription"),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Flexible(
-                      child: Padding(
-                          padding:
-                              EdgeInsets.fromLTRB(width / 15, 0, width / 15, 0),
-                          child: Text(snapshot.data,
-                              style: TextStyle(fontWeight: FontWeight.bold))));
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return Center(child: CircularProgressIndicator());
-              }),
-        ]),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: ElevatedButton(
-                  child: Text(_playing),
-                  onPressed: () {
-                    if (_playing == "Play") {
-                      setState(() {
-                        _playing = "Pause";
-                        _player.play(
-                            "https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FMental%2FWhat%E2%80%99s%20standing%20strong%20mentally.m4a?alt=media&token=38fb7332-2c67-4e49-aab0-755a19685c1f");
-                      });
-                    } else {
-                      setState(() {
-                        _playing = "Play";
-                        _player.pause();
-                      });
+            ),
+            //get desctriptions.
+            Row(children: [
+              FutureBuilder<String>(
+                  future: getText(day, day + "MentalDescription"),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Flexible(
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  width / 15, 0, width / 15, 0),
+                              child: Text(snapshot.data,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold))));
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
                     }
+                    return Center(child: CircularProgressIndicator());
                   }),
-            )),
-        //divider used to avoid overlapping with navigation bar
-        const Divider(
-          height: 80,
-          thickness: 5,
-          indent: 20,
-          endIndent: 20,
-        ),
-      ],
-    ))));
+            ]),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton(
+                      child: Text(_playing),
+                      onPressed: () {
+                        if (_playing == "Play") {
+                          setState(() {
+                            _playing = "Pause";
+                            _player.play(
+                                "https://firebasestorage.googleapis.com/v0/b/trojan-tcd-dev.appspot.com/o/Program%2FDay1%2FMental%2FWhat%E2%80%99s%20standing%20strong%20mentally.m4a?alt=media&token=38fb7332-2c67-4e49-aab0-755a19685c1f");
+                          });
+                        } else {
+                          setState(() {
+                            _playing = "Play";
+                            _player.pause();
+                          });
+                        }
+                      }),
+                )),
+            //divider used to avoid overlapping with navigation bar
+            const Divider(
+              height: 80,
+              thickness: 5,
+              indent: 20,
+              endIndent: 20,
+            ),
+          ],
+        ))));
   }
 
   Future<String> loadAsset() async {
@@ -222,10 +226,12 @@ class _FullProgramPage extends State<FullProgramPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context)
         .size; //this gives us total height and width of our device
-    return SingleChildScrollView(
+    return NotePage();
+    /*
+    SingleChildScrollView(
         child: Column(
       children: [
-        Container(
+        /*Container(
           constraints: BoxConstraints.expand(height: size.height * .05),
           color: Colors.grey,
           child: Text('',
@@ -233,14 +239,15 @@ class _FullProgramPage extends State<FullProgramPage> {
                 //fontSize: 10.0,
                 fontWeight: FontWeight.normal,
               )),
-        ),
-        SizedBox(height: 400, child: NotePage()),
+        ),*/
+
+        //SizedBox(height: 400, child: NotePage()),
         //TodoList(),
-        ElevatedButton(
+        /*ElevatedButton(
             child: const Text('Back'),
-            onPressed: () => Navigator.pushNamed(context, '/'))
+            onPressed: () => Navigator.pushNamed(context, '/'))*/
       ],
-    ));
+    ));*/
   }
 }
 
@@ -408,21 +415,31 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
     return Scaffold(
-        body: allNotes == null
-            ? Container()
-            : ListView.builder(
-                itemCount: allNotes.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return Dismissible(
-                      key: Key(allNotes[index]),
-                      child: Card(
-                          child: ListTile(
-                        title: Text("" + allNotes[index] + ""),
-                      )));
-                }),
-        floatingActionButton: FloatingActionButton(
+      appBar: AppBar(
+        title: Text("Notes"),
+      ),
+      body: allNotes == null
+          ? Container()
+          : ListView.builder(
+              itemCount: allNotes.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return Dismissible(
+                    onDismissed: (direction) => setState(() {
+                          allNotes.remove(allNotes[index]);
+                        }),
+                    key: Key(allNotes[index]),
+                    child: Card(
+                        child: ListTile(
+                      title: Text("" + allNotes[index] + ""),
+                    )));
+              }),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, height * 0.075),
+        child: FloatingActionButton(
             onPressed: () => showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -445,7 +462,10 @@ class _NotePageState extends State<NotePage> {
                       ]);
                 }),
             tooltip: 'Add Item',
-            child: Icon(Icons.add)));
+            child: Icon(Icons.add)),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
   }
 }
 
