@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+//import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +24,7 @@ final GlobalKey<NavigatorState> secondTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> thirdTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> fourthTabNavKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> fifthTabNavKey = GlobalKey<NavigatorState>();
-FirebaseAnalytics analytics = FirebaseAnalytics();
+//FirebaseAnalytics analytics = FirebaseAnalytics();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +36,7 @@ void main() async {
 // make initial api requests before app starts
 Future<HashMap> initRequests() async {
   HashMap out = new HashMap();
-  if (FirebaseAuth.instance.currentUser == null) return null;
+  //if (FirebaseAuth.instance.currentUser == null) return null;
   try {
     // get exercise names todo could get pairs of img-description instead?
     Response response = await Dio().get(
@@ -55,13 +55,13 @@ Future<HashMap> initRequests() async {
 
     // get list of workouts and their exercises
     Dio dio = new Dio();
-    String token = await FirebaseAuth.instance.currentUser.getIdToken();
-    log(token);
+    //String token = await FirebaseAuth.instance.currentUser.getIdToken();
+    //log(token);
 
     response = await dio.get(
         "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/workouts",
-        options: Options(
-            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}));
+        /* options: Options(
+            headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}) */);
     out.putIfAbsent("workouts", () => response.data);
 
     // other...

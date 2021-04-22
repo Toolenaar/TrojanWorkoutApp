@@ -32,13 +32,12 @@ dependencies:
   jwt_decode: ^0.1.0
   firebase_auth: ^0.18.0+1
   firebase_core: ^0.5.0
-  google_sign_in: ^4.1.1
-  firebase_crashlytics: ^0.2.3
+  google_sign_in: ^4.5.1
+  #firebase_crashlytics: ^2.0.0
   firebase_analytics: ^6.3.0
   cloud_functions: ^0.7.0
   toast: ^0.1.5
   email_validator: ^1.0.5
-  apple_sign_in: ^0.1.0
   table_calendar: ^2.3.3
   url_launcher: ^5.7.10
   sqflite: ^1.0.0

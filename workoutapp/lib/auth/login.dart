@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -605,38 +604,42 @@ class _LoginPageState extends State<LoginPage> {
 // ----------------------------Google sign in---------------------------------
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+  final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
 
   Future<String> signInWithGoogle() async {
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    log(googleSignInAccount.displayName);
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+    try {
+      final GoogleSignInAccount googleSignInAccount =
+          await googleSignIn.signIn();
+      log(googleSignInAccount.displayName);
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-    final UserCredential authResult =
-        await _auth.signInWithCredential(credential);
-    final User user = authResult.user;
-    if (user.displayName != null) {
-      log(user.displayName);
-    }
+      final UserCredential authResult =
+          await _auth.signInWithCredential(credential);
+      final User user = authResult.user;
+      if (user.displayName != null) {
+        log(user.displayName);
+      }
 
-    if (user != null) {
-      assert(!user.isAnonymous);
-      assert(await user.getIdToken() != null);
+      if (user != null) {
+        assert(!user.isAnonymous);
+        assert(await user.getIdToken() != null);
 
-      final User currentUser = await widget.auth.getCurrentUser();
+        final User currentUser = await widget.auth.getCurrentUser();
 //      widget.loginCallback();
-      widget.loginRequestName();
-      assert(user.uid == currentUser.uid);
+        widget.loginRequestName();
+        assert(user.uid == currentUser.uid);
 
-      return '$user';
+        return '$user';
+      }
+    } catch (e) {
+      log(e.toString());
     }
-
     return null;
   }
 
@@ -677,97 +680,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-// ------------------------------Apple Sign in----------------------------
-
-  Widget _appleSignInButton() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-      child: OutlineButton(
-        splashColor: Colors.grey,
-        onPressed: () {
-          log('pressed');
-          signInWithApple().catchError((e) => showModalBottomSheet(
-                context: context,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25)),
-                builder: (context) => Container(
-                  child: Text('Error with Apple Sign In'),
-                ),
-              ));
-        },
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        highlightElevation: 0,
-        borderSide: BorderSide(color: Colors.grey),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-          child: Row(
-//          mainAxisSize: MainAxisSize.min,
-//          mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image(
-                  image: AssetImage("assets/thirdParties/appleLogo.png"),
-                  height: 32.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 53),
-                child: Text(
-                  'Sign In with Apple',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<String> signInWithApple() async {
-    if (!await AppleSignIn.isAvailable()) {
-      throw Exception(
-          "Your Device Does Not Currently Support Apple Sign In"); //Break from the program
-    }
-    final AuthorizationResult result = await AppleSignIn.performRequests([
-      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-    ]);
-    switch (result.status) {
-      case AuthorizationStatus.authorized:
-      // here we're going to sign in the user within firebase   break;
-      case AuthorizationStatus.error:
-        // do something
-        break;
-
-      case AuthorizationStatus.cancelled:
-        break;
-    }
-    final AppleIdCredential appleIdCredential = result.credential;
-
-    OAuthProvider oAuthProvider = new OAuthProvider("apple.com");
-    final AuthCredential credential = oAuthProvider.credential(
-      idToken: String.fromCharCodes(appleIdCredential.identityToken),
-      accessToken: String.fromCharCodes(appleIdCredential.authorizationCode),
-    );
-
-    final UserCredential authResult =
-        await _auth.signInWithCredential(credential);
-    final User user = authResult.user;
-
-    if (user != null) {
-      assert(!user.isAnonymous);
-      assert(await user.getIdToken() != null);
-
-      final User currentUser = await widget.auth.getCurrentUser();
-//      widget.loginCallback();
-      widget.loginRequestName();
-      assert(user.uid == currentUser.uid);
-
-      return '$user';
-    }
-
-    return null;
   }
 }
