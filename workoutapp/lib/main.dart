@@ -64,11 +64,12 @@ Future<HashMap> initRequests() async {
             headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}) */);
     out.putIfAbsent("workouts", () => response.data);
 
-    response = await dio.get(
+    //this gives http status 500
+    /*response = await dio.get(
         "https://europe-west1-trojan-tcd-dev.cloudfunctions.net/notes",
         /* options: Options(
             headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}) */);
-    out.putIfAbsent("notes", () => response.data);
+    out.putIfAbsent("notes", () => response.data);*/
 
     // other...
 
@@ -186,30 +187,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-//class Personal extends StatelessWidget {
-//@override
-//Widget build(BuildContext context) {
-//return Container(
-//color: Colors.greenAccent,
-//);
-//}
-//}
-
-//class Community extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Container(
-//      color: Colors.blue,
-//    );
-//  }
-//}
-
-//class Library extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Container(
-//      color: Colors.yellowAccent,
-//    );
-//  }
-//}

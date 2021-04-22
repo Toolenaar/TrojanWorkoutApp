@@ -88,13 +88,6 @@ class WorkoutsHomePage extends StatelessWidget {
                               0)))));
         },
       ),
-      // ListView.builder( // list of exercises in workout
-      //   shrinkWrap: true,
-      //   itemCount: exercises.length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     return ExerciseWidget(exercises[index]);
-      //   },
-      // )
     ])));
   }
 }
@@ -352,18 +345,6 @@ class _PhysicalProgramPageState extends State<PhysicalProgramPage> {
                   }),
             ))
 
-        // Align(
-        //     alignment: Alignment.bottomCenter,
-        //     child: Padding(
-        //         padding: EdgeInsets.all(150),
-        //         child: Text("audio",
-        //           style: TextStyle(
-        //               fontWeight: FontWeight.bold,
-        //             color: Colors.white
-        //           ),
-        //         )
-        //     )
-        // )
       ]);
     } catch (e) {
       print("err");
@@ -482,11 +463,6 @@ Future<String> call() async {
     );
     Response response = await Dio().get(url.data);
     return response.data;
-    // File file = File("assets/bruce-lee.jpg");
-    // var raf = file.openSync(mode: FileMode.write);
-    // raf.writeByteSync(response.data);
-    // await raf.close();
-    // return "bruce-lee.jpg";
   } catch (e) {
     print(e);
     return null;
